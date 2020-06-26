@@ -1,43 +1,33 @@
 {% extends "base.html" %}
-{% block title %}
-Welcome
+
+{% block head %}
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
 {% endblock %}
+
 {% block body %}
-<ion-app>
-    <ion-header translucent>
-        <ion-toolbar>
-          <ion-title>Welcome</ion-title>
-        </ion-toolbar>
-      </ion-header>,
-      <ion-content fullscreen>
-    <ion-grid>
-        <ion-row class="ion-align-items-center">
-            <ion-col>
-                <ion-card>
-                    <ion-card-header>
-                      <ion-card-title>Student Login</ion-card-title>
-                    </ion-card-header>
-                    <ion-button href="stu/login">Student Login</ion-button>
-                  </ion-card>
-            </ion-col>
-            <ion-col>
-                <ion-card>
-                    <ion-card-header>
-                      <ion-card-title>Parent Login</ion-card-title>
-                    </ion-card-header>
-                    <ion-button href="parent/login">Parent Login</ion-button>
-                  </ion-card>
-            </ion-col>
-            <ion-col>
-                <ion-card>
-                    <ion-card-header>
-                      <ion-card-title>Faculty Login</ion-card-title>
-                    </ion-card-header>
-                    <ion-button href="staff/login">Faculty Login</ion-button>
-                  </ion-card>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
-    </ion-content>
-  </ion-app>
+    <div class="card-wrapper">
+
+        <div class="card">
+
+            <h1 class="center">Log In</h1>
+
+            <form name="login_form">
+
+                <label for="email">Email</label>
+                <input type="text" name="email" class="field" required>
+
+                <label for="password">Password</label>
+                <input type="password" name="password" class="field" required>
+
+                <p class="error error--hidden"></p>
+
+                <input type="submit" value="Log In" class="btn">
+
+            </form>
+
+        </div>
+
+    </div>
 {% endblock %}
