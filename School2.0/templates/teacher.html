@@ -1,57 +1,51 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <title>Teacher</title>
+    <title>Student</title>
 {% endblock %}
 
 {% block body %}
     <ion-app>
         <ion-menu side="start" content-id="main-content">
-            <ion-header>
-              <ion-toolbar translucent>
-                <ion-buttons slot="start">
-                    <ion-back-button default-href="http://localhost:5000/staff/{{id}}"></ion-back-button>
-                <ion-title>Menu</ion-title>
-              </ion-toolbar>
-            </ion-header>
+          <ion-item>
+            <ion-avatar slot="start">
+              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+            </ion-avatar>
+            <ion-label>{{id}}</ion-label>
+          </ion-item>
             <ion-content>
               <ion-list>
                 <ion-item>
-                  <ion-icon name="mail" slot="start"></ion-icon>
-                  <ion-label>Inbox</ion-label>
+                  <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Timetable</ion-button>
                 </ion-item>
                 <ion-item>
-                  <ion-icon name="paper-plane" slot="start"></ion-icon>
-                  <ion-label>Outbox</ion-label>
+                  <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Attendance</ion-button>
                 </ion-item>
                 <ion-item>
-                  <ion-icon name="heart" slot="start"></ion-icon>
-                  <ion-label>Favorites</ion-label>
+                  <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Assignments</ion-button>
                 </ion-item>
                 <ion-item>
-                  <ion-icon name="archive" slot="start"></ion-icon>
-                  <ion-label>Archived</ion-label>
+                  <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Results</ion-button>
                 </ion-item>
                 <ion-item>
-                  <ion-icon name="trash" slot="start"></ion-icon>
-                  <ion-label>Trash</ion-label>
+                  <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Class Messages</ion-button>
                 </ion-item>
                 <ion-item>
-                  <ion-icon name="warning" slot="start"></ion-icon>
-                  <ion-label>Spam</ion-label>
+                  <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Update Details</ion-button>
                 </ion-item>
-                <ion-button expand="block" fill="clear" color="danger" href="http://localhost:5000/logout">Logout</ion-button>
+
+                  <ion-button expand="block" fill="clear" color="danger" href="http://localhost:5000/logout">Logout</ion-button>
               </ion-list>
             </ion-content>
           </ion-menu>
       
           <div class="ion-page" id="main-content">
             <ion-header>
-              <ion-toolbar>
+              <ion-toolbar color="dark">
                 <ion-buttons slot="start">
                   <ion-menu-button></ion-menu-button>
                 </ion-buttons>
-                <ion-title>Inbox</ion-title>
+                <ion-title>School2.0</ion-title>
               </ion-toolbar>
             </ion-header>
           </div>

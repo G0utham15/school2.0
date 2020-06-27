@@ -17,16 +17,20 @@ class User:
             return redirect('/parent/{}'.format(user['username'].lower()))
         elif user['username'][0]=='T' or user['username'][0]=='t':
             return redirect('/staff/{}'.format(user['username'].lower()))
+        else:
+            return redirect('/admin/{}'.format(result.get('username').lower()))
 
     def signout(self):
         session.clear()
         return redirect('/')
+    
     def add_user(self, details):
         user={
             "_id": uuid.uuid4().hex,
             "name": details.get('name'),
             "username": details.get('username'),
-            "password": details.get('password')
+            "password": details.get('password'),
+            "role":details.get('role'),
         }
         user['password'] = pbkdf2_sha256.encrypt(user['password'])
         if db.users.find_one({ "username": user['username'] }):
@@ -95,15 +99,15 @@ def stud_login(id):
 
 @app.route('/parent/<id>')
 def parent_login(id):
-    return render_template('parents.html')
+    return render_template('parents.html',id=id)
 
 @app.route('/staff/<id>')
 def staff_login(id):
-    return render_template('teacher.html')
+    return render_template('teacher.html',id=id)
 
 @app.route('/admin/<id>')
 def admin(id):
-    return render_template("admin.html")
+    return render_template("admin.html",id=id)
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -122,13 +126,11 @@ def result():
     cur_user=User()
     result=request.form
     cur_user.add_user(result)
-    if result.get('username')[0]=='S' or result.get('username')[0]=='s':
+    if result.get('role')=='student':
         return redirect('/stu/{}'.format(result.get('username').lower()))
-    elif result.get('username')[0]=='P' or result.get('username')[0]=='p':
-        return redirect('/parent/{}'.format(result.get('username').lower()))
-    elif result.get('username')[0]=='T' or result.get('username')[0]=='t':
+    elif result.get('role')=='staff':
         return redirect('/staff/{}'.format(result.get('username').lower()))
-    else:
+    elif result.get('role')=='admin':
         return redirect('/admin/{}'.format(result.get('username').lower()))
 
 if __name__=='__main__':
