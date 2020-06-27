@@ -14,7 +14,12 @@ class User:
         del user['password']
         session['logged_in'] = True
         session['user'] = user
-        return jsonify(user), 200
+        if user['username'][0]=='S' or user['username'][0]=='s':
+            return redirect('/stu/{}'.format(user['username'].lower()))
+        elif user['username'][0]=='P' or user['username'][0]=='p':
+            return redirect('/parent/{}'.format(user['username'].lower()))
+        elif user['username'][0]=='T' or user['username'][0]=='t':
+            return redirect('/staff/{}'.format(user['username'].lower()))
 
     def signout(self):
         session.clear()
@@ -73,7 +78,7 @@ class User:
 
     def login(self):
         user = db.users.find_one({
-            "email": request.form.get('email')
+            "username": request.form.get('username')
         })
 
         if user and pbkdf2_sha256.verify(request.form.get('password'), user['password']):
@@ -117,11 +122,12 @@ def result():
     result=request.form
     cur_user.add_user(result)
     if result.get('username')[0]=='S' or result.get('username')[0]=='s':
-        return redirect('/stu/{}'.format(result.get('username')))
+        return redirect('/stu/{}'.format(result.get('username').lower()))
     elif result.get('username')[0]=='P' or result.get('username')[0]=='p':
-        return redirect('/parent/{}'.format(result.get('username')))
+        return redirect('/parent/{}'.format(result.get('username').lower()))
     elif result.get('username')[0]=='T' or result.get('username')[0]=='t':
-        return redirect('/staff/{}'.format(result.get('username')))
+        return redirect('/staff/{}'.format(result.get('username').lower()))
 
 if __name__=='__main__':
+    app.secret_key="kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"
     app.run(debug=True)
