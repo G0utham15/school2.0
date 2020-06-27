@@ -6,9 +6,6 @@ from passlib.hash import pbkdf2_sha256
 client = pymongo.MongoClient("mongodb+srv://g0utham:Sg106271@cluster0-v0h6w.gcp.mongodb.net/?retryWrites=true&w=majority")
 db = client.school_manage
 
-secret_key="kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"
-
-
 class User:
     def start_session(self, user):
         del user['password']
@@ -94,7 +91,7 @@ def home():
 
 @app.route('/stu/<id>')
 def stud_login(id):
-    return render_template('student.html')
+    return render_template('student.html', id=id)
 
 @app.route('/parent/<id>')
 def parent_login(id):
@@ -104,9 +101,9 @@ def parent_login(id):
 def staff_login(id):
     return render_template('teacher.html')
 
-@app.route('/admin')
-def dashboard():
-    return render_template("dashboard.html")
+@app.route('/admin/<id>')
+def admin(id):
+    return render_template("admin.html")
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -115,6 +112,10 @@ def login():
 @app.route('/signup', methods=['GET','POST'])
 def signup():
     return render_template('signup.html')
+
+@app.route('/logout')
+def logout():
+    return User().signout()
 
 @app.route('/result', methods=['GET', 'POST'])
 def result():
@@ -127,6 +128,8 @@ def result():
         return redirect('/parent/{}'.format(result.get('username').lower()))
     elif result.get('username')[0]=='T' or result.get('username')[0]=='t':
         return redirect('/staff/{}'.format(result.get('username').lower()))
+    else:
+        return redirect('/admin/{}'.format(result.get('username').lower()))
 
 if __name__=='__main__':
     app.secret_key="kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"
