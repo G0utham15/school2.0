@@ -11,14 +11,7 @@ class User:
         del user['password']
         session['logged_in'] = True
         session['user'] = user
-        if user['username'][0]=='S' or user['username'][0]=='s':
-            return redirect('/stu/{}'.format(user['username'].lower()))
-        elif user['username'][0]=='P' or user['username'][0]=='p':
-            return redirect('/parent/{}'.format(user['username'].lower()))
-        elif user['username'][0]=='T' or user['username'][0]=='t':
-            return redirect('/staff/{}'.format(user['username'].lower()))
-        else:
-            return redirect('/admin/{}'.format(result.get('username').lower()))
+        return redirect('/{}/{}'.format(user.get('role').lower(), user.get('username').lower()))
 
     def signout(self):
         session.clear()
@@ -48,10 +41,10 @@ class User:
             "DOB": "",
             "Gender": "",
             "DOA": "",
-            "Class": "",
             "Mobile": "",
             "email": "",
-            "password": "",
+            "Class": "",
+            "stu_id":"",
         }
         return jsonify(user)
 
@@ -65,7 +58,6 @@ class User:
             "Mobile": "",
             "email": "",
             "emp_id": "",
-            "password": "",
         }
         return jsonify(user)
 
@@ -91,29 +83,17 @@ app=Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('login.html')
 
-@app.route('/stu/<id>')
-def stud_login(id):
-    return render_template('student.html', id=id)
-
-@app.route('/parent/<id>')
-def parent_login(id):
-    return render_template('parents.html',id=id)
-
-@app.route('/staff/<id>')
-def staff_login(id):
-    return render_template('teacher.html',id=id)
-
-@app.route('/admin/<id>')
-def admin(id):
-    return render_template("admin.html",id=id)
+@app.route('/<role>/<id>')
+def landin(role, id):
+    return render_template('landin.html', role= role, id=id)
 
 @app.route('/login', methods=['POST'])
 def login():
     return User().login()
 
-@app.route('/signup', methods=['GET','POST'])
+@app.route('/adduser', methods=['GET','POST'])
 def signup():
     return render_template('signup.html')
 
@@ -126,12 +106,11 @@ def result():
     cur_user=User()
     result=request.form
     cur_user.add_user(result)
-    if result.get('role')=='student':
-        return redirect('/stu/{}'.format(result.get('username').lower()))
-    elif result.get('role')=='staff':
-        return redirect('/staff/{}'.format(result.get('username').lower()))
-    elif result.get('role')=='admin':
-        return redirect('/admin/{}'.format(result.get('username').lower()))
+    return redirect('/{}/{}'.format(result.get('role').lower(), result.get('username').lower()))
+    
+@app.route('/details/<id>', methods=['GET', 'POST'])
+def details(id):
+    return render_template('details.html', id=id)
 
 if __name__=='__main__':
     app.secret_key="kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"
