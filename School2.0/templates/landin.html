@@ -32,7 +32,7 @@
                 <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Class Messages</ion-button>
               </ion-item>
               <ion-item>
-                <ion-button expand="block" fill="clear" href="http://localhost:5000/details/{{id}}">Update Details</ion-button>
+                <ion-button expand="block" fill="clear" href="http://localhost:5000/details/{{role}}/{{id}}">Update Details</ion-button>
               </ion-item>
 
                 <ion-button expand="block" fill="clear" color="danger" href="http://localhost:5000/logout">Logout</ion-button>
@@ -60,6 +60,9 @@
                   </ion-item>
                   <ion-item>
                     <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Fee Recipts</ion-button>
+                  </ion-item>
+                  <ion-item>
+                    <ion-button expand="block" fill="clear" href="http://localhost:5000/details/{{role}}/{{id}}">Update Details</ion-button>
                   </ion-item>
                   <ion-item>
                     <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Complaints</ion-button>
@@ -94,7 +97,7 @@
                         <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Class Messages</ion-button>
                       </ion-item>
                       <ion-item>
-                        <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Update Details</ion-button>
+                        <ion-button expand="block" fill="clear" href="http://localhost:5000/details/{{role}}/{{id}}">Update Details</ion-button>
                       </ion-item>
       
                         <ion-button expand="block" fill="clear" color="danger" href="http://localhost:5000/logout">Logout</ion-button>
@@ -112,11 +115,11 @@
             <ion-content>
               <ion-list>
                 <ion-item>
-                  <ion-button expand="block" fill="clear" href="http://localhost:5000/signup">Add Users</ion-button>
+                  <ion-button expand="block" fill="clear" href="http://localhost:5000/{{id}}/signup">Add Users</ion-button>
                 </ion-item>
                 
                 <ion-item>
-                  <ion-button expand="block" fill="clear" href="http://localhost:5000/details/{{id}}">Update Details</ion-button>
+                  <ion-button expand="block" fill="clear" href="http://localhost:5000/details/{{role}}/{{id}}">Update Details</ion-button>
                 </ion-item>
 
                   <ion-button expand="block" fill="clear" color="danger" href="http://localhost:5000/logout">Logout</ion-button>

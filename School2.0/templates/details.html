@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block body %}
+    {% if role == 'student' %}
     <div class="card-wrapper">
 
         <div class="card">
@@ -28,4 +29,53 @@
         </div>
 
     </div>
+
+    {% elif role == 'staff' %}
+    <div class="card-wrapper">
+
+        <div class="card">
+
+            <h1 class="center">Log In</h1>
+            <form action="http://localhost:5000/login" method="POST" name="login_form">
+
+                <label for="username">ID</label>
+                <input type="text" name="username" class="field" required>
+
+                <label for="password">Password</label>
+                <input type="password" name="password" class="field" required>
+
+                <p class="error error--hidden"></p>
+
+                <input type="submit" value="Update Details" class="btn">
+
+            </form>
+
+        </div>
+
+    </div>
+    
+    {% elif role == 'admin' %}
+    <div class="card-wrapper">
+
+        <div class="card">
+
+            <h1 class="center">Log In</h1>
+            <form action="http://localhost:5000/login" method="POST" name="login_form">
+
+                <label for="username">ID</label>
+                <input type="text" name="username" class="field" required>
+
+                <label for="password">Password</label>
+                <input type="password" name="password" class="field" required>
+
+                <p class="error error--hidden"></p>
+
+                <input type="submit" value="Update Details" class="btn">
+
+            </form>
+
+        </div>
+
+    </div>
+    {% endif %}
 {% endblock %}

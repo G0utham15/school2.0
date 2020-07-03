@@ -13,6 +13,16 @@ class User:
         session['user'] = user
         return redirect('/{}/{}'.format(user.get('role').lower(), user.get('username').lower()))
 
+    def announce(self, announce, id):
+        announcement={
+            "_id": uuid.uuid4().hex,
+            "title":announce.get('title'),
+            "content": announce.get('content'),
+            "posted by": id
+        }
+        if db.announcements.insert_one(announcement):
+            return redirect('/admin/{}'.format(id))
+
     def signout(self):
         session.clear()
         return redirect('/')
@@ -34,7 +44,7 @@ class User:
 
         return jsonify({ "error": "Signup failed" }), 400
 
-    def stu_details(self):
+    def stu_insert(self):
         user = {
             "_id": "",
             "Name": "",
@@ -46,9 +56,13 @@ class User:
             "Class": "",
             "stu_id":"",
         }
+        if db.user_details.find_one({ "stu_id":user['stu_id']}):
+            pass # Found then Update
+        if db.users.insert_one(user):
+            return self.start_session(user)
         return jsonify(user)
 
-    def teacher_details(self):
+    def teacher_update(self):
         user = {
             "_id": "",
             "Name": "",
@@ -61,12 +75,13 @@ class User:
         }
         return jsonify(user)
 
-    def teacher_marks(self):
+    def marks(self):
         marks = {
             "_id": "",
-            "Reg_no": "",
+            "class_id":"",
+            "exam_name": "",
             "sub_id": "",
-            "exam_name": ""
+            "Reg_no": "",
         }
 
     def login(self):
@@ -78,7 +93,9 @@ class User:
             return self.start_session(user)
 
         return jsonify({"error": "Invalid login credentials"})
-
+        
+    def fee(self):
+        pass
 app=Flask(__name__)
 
 @app.route('/')
@@ -93,8 +110,8 @@ def landin(role, id):
 def login():
     return User().login()
 
-@app.route('/adduser', methods=['GET','POST'])
-def signup():
+@app.route('/adm_adduser', methods=['GET','POST'])
+def adm_signup():
     return render_template('signup.html')
 
 @app.route('/logout')
@@ -103,14 +120,27 @@ def logout():
 
 @app.route('/result', methods=['GET', 'POST'])
 def result():
-    cur_user=User()
     result=request.form
-    cur_user.add_user(result)
+    User().add_user(result)
     return redirect('/{}/{}'.format(result.get('role').lower(), result.get('username').lower()))
-    
-@app.route('/details/<id>', methods=['GET', 'POST'])
-def details(id):
-    return render_template('details.html', id=id)
+
+@app.route('/marks')
+def marks():
+    pass
+
+@app.route('/post/<id>', methods=['POST'])
+def announce(id):
+    ann=request.form
+    User().announce(ann, id)
+    return redirect('/admin/{}'.format(id))
+
+@app.route('/updates/<role>/<id>', methods=['POST', 'GET'])
+def announcements(role, id):
+    return render_template('announce.html', role=role, id=id)
+
+@app.route('/details/<role>/<id>', methods=['GET', 'POST'])
+def get_details(role, id):
+    return render_template('details.html', id=id, role=role)
 
 if __name__=='__main__':
     app.secret_key="kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Updates</title>
+<link rel="stylesheet" href="/static/css/normalize.css">
+<link rel="stylesheet" href="/static/css/styles.css">
+{% endblock %}
+{% block body %}
+<ion-app>
+{% if role == 'admin' %}
+    <ion-header>
+      <ion-toolbar color="dark">
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>School2.0</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+        <div class="card-wrapper">
+    
+        <div class="card">
+    
+            <h1 class="center">Announce</h1>
+            <form action="http://localhost:5000/post/{{id}}" method="POST" name="login_form">
+    
+                <label for="title">Title</label>
+                <input type="text" name="title" class="field" required>
+    
+                <label for="content">Content</label>
+                <input type="content" name="content" class="field" required>
+
+                <p class="error error--hidden"></p>
+    
+                <input type="submit" value="Announce" class="btn">
+    
+            </form>
+    
+        </div>
+    
+    </div>
+</ion-content>
+
+
+{% else %}
+<ion-header>
+    <ion-toolbar color="dark">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>School2.0</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+      <div class="card-wrapper">
+  
+      <div class="card">
+  
+          <h1 class="center">Announce</h1>
+          
+  
+      </div>
+  
+  </div>
+</ion-content>
+{% endif %}
+</ion-app>
+{% endblock %}
