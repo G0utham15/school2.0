@@ -55,6 +55,7 @@ class User:
             "email": "",
             "Class": "",
             "stu_id":"",
+            "fee":"",
         }
         if db.user_details.find_one({ "stu_id":user['stu_id']}):
             pass # Found then Update
@@ -72,6 +73,7 @@ class User:
             "Mobile": "",
             "email": "",
             "emp_id": "",
+            "salary":""
         }
         return jsonify(user)
 
@@ -136,7 +138,8 @@ def announce(id):
 
 @app.route('/updates/<role>/<id>', methods=['POST', 'GET'])
 def announcements(role, id):
-    return render_template('announce.html', role=role, id=id)
+    prev_announce=list(db.announcements.find({}))
+    return render_template('announce.html', role=role, id=id, ann=prev_announce)
 
 @app.route('/details/<role>/<id>', methods=['GET', 'POST'])
 def get_details(role, id):

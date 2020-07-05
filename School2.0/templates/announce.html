@@ -55,11 +55,14 @@
   
       <div class="card">
   
-          <h1 class="center">Announce</h1>
-          
-  
+          <h1 class="center">Announcements</h1>
+          <p>
+            {% for key in ann %}
+              <ion-title><h1>{{ key['title'] }}</h1></ion-title>
+              <h5>{{ key['content'] }}</h5>
+            {% endfor %}
+          </p>
       </div>
-  
   </div>
 </ion-content>
 {% endif %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <title>Student</title>
+    <title>Welcome {{role}}</title>
 {% endblock %}
 
 {% block body %}
@@ -16,6 +16,9 @@
         </ion-item>
           <ion-content>
             <ion-list>
+              <ion-item>
+                <ion-button expand="block" fill="clear" href="http://localhost:5000/updates/{{role}}/{{id}}">Announcements</ion-button>
+              </ion-item>
               <ion-item>
                 <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Timetable</ion-button>
               </ion-item>
@@ -49,6 +52,9 @@
             </ion-item>
               <ion-content>
                 <ion-list>
+                  <ion-item>
+                    <ion-button expand="block" fill="clear" href="http://localhost:5000/updates/{{role}}/{{id}}">Announcements</ion-button>
+                  </ion-item>
                   <ion-item>
                     <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Attendance</ion-button>
                   </ion-item>
@@ -114,6 +120,11 @@
           </ion-item>
             <ion-content>
               <ion-list>
+
+                <ion-item>
+                  <ion-button expand="block" fill="clear" href="http://localhost:5000/updates/{{role}}/{{id}}">Announce</ion-button>
+                </ion-item>
+
                 <ion-item>
                   <ion-button expand="block" fill="clear" href="http://localhost:5000/{{id}}/signup">Add Users</ion-button>
                 </ion-item>
