@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block head %}
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+{% endblock %}
+
+{% block body %}
+    {% if role == 'student' %}
+    <div class="card-wrapper">
+
+        <div class="card">
+
+            <h1 class="center">Log In</h1>
+            <form action="http://localhost:5000/" method="POST" name="login_form">
+
+                <label for="name">Name</label>
+                <input type="text" name="name" class="field" required>
+
+                <label for="id">userid</label>
+                <input type="id" name="id" class="field" required>
+
+                <p class="error error--hidden"></p>
+
+                <input type="submit" value="Update Details" class="btn">
+
+            </form>
+
+        </div>
+
+    </div>
+    {% elif role == 'staff' %}
+    <div class="card-wrapper">
+
+        <div class="card">
+
+            <h1 class="center">Log In</h1>
+            <form action="http://localhost:5000/" method="POST" name="login_form">
+
+                <label for="name">Name</label>
+                <input type="text" name="name" class="field" required>
+
+                <label for="id">userid</label>
+                <input type="id" name="id" class="field" required>
+
+                <p class="error error--hidden"></p>
+
+                <input type="submit" value="Update Details" class="btn">
+
+            </form>
+
+        </div>
+
+    </div>
+    
+    {% elif role == 'admin' %}
+    <div class="card-wrapper">
+
+        <div class="card">
+
+            <h1 class="center">Log In</h1>
+            <form action="http://localhost:5000/" method="POST" name="login_form">
+
+                <label for="name">Name</label>
+                <input type="text" name="name" class="field" required>
+
+                <label for="id">userid</label>
+                <input type="id" name="id" class="field" required>
+
+                <p class="error error--hidden"></p>
+
+                <input type="submit" value="Update Details" class="btn">
+
+            </form>
+
+        </div>
+
+    </div>
+    {% endif %}
+{% endblock %}

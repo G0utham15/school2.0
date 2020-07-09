@@ -1,0 +1,34 @@
+{% extends "base-login.html" %}
+{% block head %}
+<title>Enter Details</title>
+{% endblock %}
+{% block body %}
+{% if role == 'student' %}
+        <h1 class="center">Log In</h1>
+        <form action="http://localhost:5000/login" method="GET" name="login_form">
+
+            <label for="name">Full Name</label>
+            <input type="text" name="name" class="field" required>
+
+            <label for="username">ID</label>
+            <input type="text" name="username" class="field" required>
+
+            <label for="dob">Date of Birth</label>
+            <input type="date" name="dob" class="field" required>
+
+            <label for="gender">Gender</label>
+            <input type="radio" name="gender" class="field" required>
+
+            <label for="mobile">Mobile</label>
+            <input type="text" name="mobile" class="field" required>
+
+            <label for="email">Email ID</label>
+            <input type="email" name="email" class="field" required>
+
+            <p class="error error--hidden"></p>
+
+            <input type="submit" value="Update Details" class="btn">
+
+        </form>
+{% endif %}
+{% endblock %}

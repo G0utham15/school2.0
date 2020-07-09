@@ -1,0 +1,44 @@
+{% extends "base-login.html" %}
+{% block head %}
+<title>Class Messages</title>
+{% endblock %}
+{% block body %}
+{% if session['user']['role']=='student' %}
+<ion-content>
+<ion-grid>
+    <ion-row>
+        <ion-col>
+            <ion-card>
+                <h1 text-align="center">Class Messages</h1>
+            </ion-card>
+        </ion-col>
+    </ion-row>
+</ion-grid>
+</ion-content>
+{% elif  session['user']['role']=='staff' %}
+<ion-content>
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <ion-card>
+                    <h1 text-align="center">Class Messages</h1>
+                    <form action="http://localhost:5000/post/" method="POST" name="login_form">
+
+                        <ion-item>
+                          <ion-label position="floating">Title</ion-label>
+                          <ion-textarea name="title"></ion-textarea>
+                        </ion-item>
+                          <ion-item>
+                            <ion-label position="floating">Description</ion-label>
+                            <ion-textarea autoGrow="true" name="content"></ion-textarea>
+                          </ion-item>
+                          <input type="submit" value="Announce" class="btn">
+              
+                      </form>
+                </ion-card>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    </ion-content>
+{% endif %}
+{% endblock %}
