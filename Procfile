@@ -1,1 +1,1 @@
-web: python School2/app.py
+worker: python School2/app.py
