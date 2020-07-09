@@ -3,7 +3,7 @@ import uuid
 import pymongo
 from datetime import datetime
 from passlib.hash import sha256_crypt
-
+import os
 client = pymongo.MongoClient("mongodb+srv://g0utham:Sg106271@cluster0-v0h6w.gcp.mongodb.net/?retryWrites=true&w=majority")
 db = client.school_manage
 
