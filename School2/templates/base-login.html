@@ -30,25 +30,25 @@
                   <ion-button expand="block" fill="clear" href="{{ url_for('home') }}">Announcements</ion-button>
                 </ion-item>
                 <ion-item>
-                  <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Timetable</ion-button>
+                  <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Timetable</ion-button>
                 </ion-item>
                 <ion-item>
-                  <ion-button expand="block" fill="clear" href="http://localhost:5000/courses">Courses</ion-button>
+                  <ion-button expand="block" fill="clear" href="{{ url_for('add_courses') }}">Courses</ion-button>
                 </ion-item>
                 <ion-item>
-                  <ion-button expand="block" fill="clear" href="http://localhost:5000/fee_pay">Fee Payment</ion-button>
+                  <ion-button expand="block" fill="clear" href="{{ url_for('fee') }}">Fee Payment</ion-button>
                 </ion-item>
                 <ion-item>
-                  <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Resources</ion-button>
+                  <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Resources</ion-button>
                 </ion-item>
                 <ion-item>
-                  <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Assignments</ion-button>
+                  <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Assignments</ion-button>
                 </ion-item>
                 <ion-item>
-                  <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Results</ion-button>
+                  <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Results</ion-button>
                 </ion-item>
                 <ion-item>
-                  <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Class Messages</ion-button>
+                  <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Class Messages</ion-button>
                 </ion-item>
                 <ion-item>
                   <ion-button expand="block" fill="clear" href="{{ url_for('get_details') }}">Update Details</ion-button>
@@ -67,20 +67,20 @@
                       <ion-button expand="block" fill="clear" href="{{ url_for('home') }}">Announcements</ion-button>
                     </ion-item>
                     <ion-item>
-                      <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Attendance</ion-button>
+                      <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Attendance</ion-button>
                     </ion-item>
                     <ion-item>
-                      <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Marks</ion-button>
+                      <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Marks</ion-button>
                     </ion-item>
                     
                     <ion-item>
-                      <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Fee Recipts</ion-button>
+                      <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Fee Recipts</ion-button>
                     </ion-item>
                     <ion-item>
                       <ion-button expand="block" fill="clear" href="{{ url_for('get_details') }}">Update Details</ion-button>
                     </ion-item>
                     <ion-item>
-                      <ion-button expand="block" fill="clear" href="{{ url_for('logout') }}">Complaints</ion-button>
+                      <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Complaints</ion-button>
                     </ion-item>
                       <ion-button expand="block" fill="clear" color="danger" href="{{ url_for('logout') }}">Logout</ion-button>
   
@@ -92,19 +92,19 @@
                     <ion-label>{{session['user']['name']}}</ion-label>
                   </ion-item>
                         <ion-item>
-                          <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Timetable</ion-button>
+                          <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Timetable</ion-button>
                         </ion-item>
                         <ion-item>
-                          <ion-button expand="block" fill="clear" href="http://localhost:5000/courses">Courses</ion-button>
+                          <ion-button expand="block" fill="clear" href="{{ url_for('add_courses') }}">Courses</ion-button>
                         </ion-item>
                         <ion-item>
-                          <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Attendance</ion-button>
+                          <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Attendance</ion-button>
                         </ion-item>
                         <ion-item>
-                          <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Assignments</ion-button>
+                          <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Assignments</ion-button>
                         </ion-item>
                         <ion-item>
-                          <ion-button expand="block" fill="clear" href="http://localhost:5000/logout">Results</ion-button>
+                          <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Results</ion-button>
                         </ion-item>
                         <ion-item>
                           <ion-button expand="block" fill="clear" href="http://localhost:5000/class_messages">Class Messages</ion-button>

@@ -205,6 +205,10 @@ def set_fee():
     User().stu_fee(request.form)
     return redirect('/')
 
+@app.route('/construct')
+def construct():
+    return render_template('construct.html')
+
 if __name__=='__main__':
     app.secret_key="kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"
     port = int(os.environ.get('PORT', 5000))
