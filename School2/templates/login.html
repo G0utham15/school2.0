@@ -52,7 +52,7 @@ input {
 
 <div class="form"> 
     <h1>Login</h1>          
-  <form action="http://localhost:5000/login" method="POST" name="login_form">
+  <form action="{{ url_for('login') }}" method="POST" name="login_form">
     
                   <input type="text" name="username" class="field" placeholder="ID" required>
   

@@ -25,7 +25,7 @@
     {% elif session['user']['role'] == 'admin' %}
     <ion-content>
         <ion-card>
-            <form action="http://localhost:5000/set_courses" method="POST" name="course_form">
+            <form action="{{ url_for('set_courses') }}" method="POST" name="course_form">
 
                 <ion-item>
                     <label for="course_id">Course ID</label>

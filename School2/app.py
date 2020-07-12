@@ -139,7 +139,7 @@ def login():
     return User().login()
 
 @app.route('/adduser', methods=['GET','POST'])
-def adm_signup():
+def adduser():
     return render_template('signup.html')
 
 @app.route('/logout')
@@ -162,7 +162,7 @@ def result():
 def marks():
     pass
 
-@app.route('/post/', methods=['POST','GET'])
+@app.route('/post', methods=['POST','GET'])
 def announce():
     ann=request.form
     print(ann)
@@ -178,21 +178,22 @@ def add_courses():
         courses=db.courses.find({'class':"{}".format(session['user']['class'])})
         return render_template('courses.html', courses=courses)
     return render_template('courses.html')
+
 @app.route('/set_courses', methods=['GET', "POST"])
 def set_courses():
     User().courses(request.form)
     return redirect('/courses')
 
-@app.route('/updates/', methods=['POST', 'GET'])
-def announcements():
+@app.route('/updates', methods=['POST', 'GET'])
+def updates():
     return render_template('announce.html', role=session['user']['role'], id=session['user']['username'])
 
-@app.route('/details/', methods=['GET', 'POST'])
+@app.route('/details', methods=['GET', 'POST'])
 def get_details():
     return jsonify(session['user'])
 
-@app.route('/fee_pay')
-def get_fee():
+@app.route('/fee')
+def fee():
     if session['user']['role']=="student":
         fee_payable=db.feePerClass.find({'class':"{}".format(session['user']['class'])})
         fee_payable=list(fee_payable)[0]
