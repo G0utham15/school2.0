@@ -1,78 +1,27 @@
 {% extends "base-login.html" %}
 {% block head %}
-    <title>Login</title>
+<title>Details</title>
 {% endblock %}
 
 {% block body %}
-    {% if role == 'student' %}
-    <div class="card-wrapper">
+<form action="{{ url_for('login') }}" method="POST" name="login_form">
+    <ion-content>
+        <ion-list>
+            {% for i in session['user'].keys() %}
+            <ion-item>
+                <ion-col>
+                    <h4>{{i}}</h4>
+                </ion-col>
+                <ion-col></ion-col>
+                <ion-col>
+                    <ion-input placeholder="{{session['user'][i]}}"></ion-input>
+                </ion-col>
+                <ion-col></ion-col>
+            </ion-item>
+            {% endfor %}
+        </ion-list>
+    </ion-content>
+</form>
 
-        <div class="card">
 
-            <h1 class="center">Log In</h1>
-            <form action="http://localhost:5000/" method="POST" name="login_form">
-
-                <label for="name">Name</label>
-                <input type="text" name="name" class="field" required>
-
-                <label for="id">userid</label>
-                <input type="id" name="id" class="field" required>
-
-                <p class="error error--hidden"></p>
-
-                <input type="submit" value="Update Details" class="btn">
-
-            </form>
-
-        </div>
-
-    </div>
-    {% elif role == 'staff' %}
-    <div class="card-wrapper">
-
-        <div class="card">
-
-            <h1 class="center">Log In</h1>
-            <form action="http://localhost:5000/" method="POST" name="login_form">
-
-                <label for="name">Name</label>
-                <input type="text" name="name" class="field" required>
-
-                <label for="id">userid</label>
-                <input type="id" name="id" class="field" required>
-
-                <p class="error error--hidden"></p>
-
-                <input type="submit" value="Update Details" class="btn">
-
-            </form>
-
-        </div>
-
-    </div>
-    
-    {% elif role == 'admin' %}
-    <div class="card-wrapper">
-
-        <div class="card">
-
-            <h1 class="center">Log In</h1>
-            <form action="http://localhost:5000/" method="POST" name="login_form">
-
-                <label for="name">Name</label>
-                <input type="text" name="name" class="field" required>
-
-                <label for="id">userid</label>
-                <input type="id" name="id" class="field" required>
-
-                <p class="error error--hidden"></p>
-
-                <input type="submit" value="Update Details" class="btn">
-
-            </form>
-
-        </div>
-
-    </div>
-    {% endif %}
 {% endblock %}
