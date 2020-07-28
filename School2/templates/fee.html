@@ -12,25 +12,25 @@
 {% elif session['user']['role']=='admin' %}
 <ion-content>
   <ion-card>
-      <form action="http://localhost:5000/set_fee" method="POST" name="course_form">
+    <form action="{{ url_for('set_fee') }}" method="POST" name="course_form">
 
-          <ion-item>
-              <label for="class">Class</label>
-              <input type="number" name="class" class="field" required>
-          </ion-item>
-         
-          <ion-item>
-              <label for="fee">fee</label>
-              <input type="text" name="fee" class="field" required>
-          </ion-item>
-          
-          <p class="error error--hidden"></p>
-          <ion-item>
-              <input type="submit" value="Sign Up" class="btn">  
-          </ion-item>
-              
+      <ion-item>
+        <label for="class">Class</label>
+        <input type="number" name="class" class="field" required>
+      </ion-item>
 
-          </form>
+      <ion-item>
+        <label for="fee">fee</label>
+        <input type="text" name="fee" class="field" required>
+      </ion-item>
+
+      <p class="error error--hidden"></p>
+      <ion-item>
+        <input type="submit" value="Sign Up" class="btn">
+      </ion-item>
+
+
+    </form>
   </ion-card>
 </ion-content>
 {% endif %}

@@ -1,7 +1,7 @@
 {% extends "base-login.html" %}
 
 {% block head %}
-    <title>Welcome {{role}}</title>
+<title>Welcome {{role}}</title>
 {% endblock %}
 
 {% block body %}
@@ -10,7 +10,9 @@
     <ion-row>
       <ion-col>
         <ion-card>
-          <ion-title class="list-group-item active">Announcements</ion-title>
+          <ion-title class="list-group-item active">
+            <h1>Announcements</h1>
+          </ion-title>
           {% for key in ann %}
           <ion-item>
             <ion-label>
@@ -32,6 +34,26 @@
         <h5>Hello {{session['user']['name']}}</h5>
       </ion-col>
     </ion-row>
+    {% if session['user']['role']=='student' %}
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-title class="list-group-item active">
+            <h1>Class Messages</h1>
+          </ion-title>
+          {% for key in cls_msg %}
+          <ion-item>
+            <ion-label>
+              <h1>{{ key['course_name'] }}</h1>
+              <h5>{{ key['content'] }}</h5>
+              <h5>Priority: {{ key['priority'] }}</h5>
+            </ion-label>
+          </ion-item>
+          {% endfor %}
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    {% endif %}
   </ion-grid>
 </ion-content>
 

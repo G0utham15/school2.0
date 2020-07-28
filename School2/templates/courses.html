@@ -1,25 +1,101 @@
 {% extends "base-login.html" %}
 
 {% block head %}
-    <title>Welcome {{role}}</title>
+<title>Welcome {{role}}</title>
+<style>
+    :root {
+        --ion-safe-area-top: 20px;
+        --ion-safe-area-bottom: 22px;
+    }
+
+    ion-col>div {
+        background-color: #f7f7f7;
+        border: solid 1px #ddd;
+        padding: 10px;
+    }
+</style>
 {% endblock %}
 {% block body %}
-    {% if session['user']['role'] == 'student' %}
-    <ion-content>
-        <h1>Courses assigned</h1>
+{% if session['user']['role'] == 'student' %}
+<ion-content>
+    <ion-grid>
+        <ion-row>
+            <ion-col></ion-col>
+            <ion-col>
+                <h1>Courses assigned</h1>
+            </ion-col>
+            <ion-col></ion-col>
+        </ion-row>
+
+
+        <ion-list>
+            <ion-item>
+                <ion-row>
+                    <div>
+                        <ion-col>Course Name</ion-col>
+                        <ion-col>Course ID</ion-col>
+                        <ion-col>Class ID</ion-col>
+                    </div>
+
+                </ion-row>
+            </ion-item>
+        </ion-list>
+
         {% for i in courses %}
-        <ion-item>
-            <h5>{{i}}</h5>
-        </ion-item>
-        {% endfor %}
-    </ion-content>   
+
+        <ion-list>
+            <ion-item>
+                <ion-row>
+                    <div>
+                        <ion-col>{{i['course_name']}}</ion-col>
+                        <ion-col>{{i['course_id']}}</ion-col>
+                        <ion-col>{{i['class_id']}}</ion-col>
+                    </div>
+                </ion-row>
+            </ion-item>
+        </ion-list>
+    </ion-grid>
+    {% endfor %}
     {% elif session['user']['role'] == 'staff' %}
     <ion-content>
-        <h1>Courses assigned</h1>
-        {% for i in courses %}
-        <ion-item>
-            <h5>{{i}}</h5>
-        </ion-item>
+        <ion-grid>
+            <ion-row>
+                <ion-col></ion-col>
+                <ion-col>
+                    <h1>Courses assigned</h1>
+                </ion-col>
+                <ion-col></ion-col>
+            </ion-row>
+
+
+            <ion-list>
+                <ion-item>
+                    <ion-row>
+                        <div>
+                            <ion-col>Course Name</ion-col>
+                            <ion-col>Course ID</ion-col>
+                            <ion-col>Class ID</ion-col>
+                        </div>
+
+                    </ion-row>
+                </ion-item>
+            </ion-list>
+
+            {% for i in courses %}
+
+            <ion-list>
+                <ion-item>
+                    <ion-row>
+                        <div>
+                            <ion-col>{{i['course_name']}}</ion-col>
+                            <ion-col>{{i['course_id']}}</ion-col>
+                            <ion-col>{{i['class_id']}}</ion-col>
+                        </div>
+                    </ion-row>
+                </ion-item>
+            </ion-list>
+        </ion-grid>
+
         {% endfor %}
     </ion-content>
     {% elif session['user']['role'] == 'admin' %}
@@ -28,10 +104,10 @@
             <form action="{{ url_for('set_courses') }}" method="POST" name="course_form">
 
                 <ion-item>
-                    <label for="course_id">Course ID</label>
+                    <ion-label for="course_id">Course ID</ion-label>
                     <input type="text" name="course_id" class="field" required>
                 </ion-item>
-                
+
                 <ion-item>
                     <label for="class_id">Class ID</label>
                     <input type="text" name="class_id" class="field" required>
@@ -40,27 +116,27 @@
                 <ion-list>
                     <ion-item>
                         <label for="course_name">Name of the course</label>
-                    <input type="text" name="course_name" class="field" required>
+                        <input type="text" name="course_name" class="field" required>
                     </ion-item>
 
-                <ion-item>
-                    <label for="class">Class</label>
-                    <input type="number" name="class" class="field" required>
-                </ion-item>
-               
-                <ion-item>
-                    <label for="faculty_id">faculty</label>
-                    <input type="text" name="faculty_id" class="field" required>
-                </ion-item>
-                
-                <p class="error error--hidden"></p>
-                <ion-item>
-                    <input type="submit" value="Sign Up" class="btn">  
-                </ion-item>
-                    
-    
-                </form>
+                    <ion-item>
+                        <label for="class">Class</label>
+                        <input type="number" name="class" class="field" required>
+                    </ion-item>
+
+                    <ion-item>
+                        <label for="faculty_id">faculty</label>
+                        <input type="text" name="faculty_id" class="field" required>
+                    </ion-item>
+
+                    <p class="error error--hidden"></p>
+                    <ion-item>
+                        <ion-button type="submit" value="Assign">Assign</ion-button>
+                    </ion-item>
+
+
+            </form>
         </ion-card>
     </ion-content>
     {% endif %}
-{% endblock %}
+    {% endblock %}

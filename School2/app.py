@@ -1,77 +1,82 @@
 from flask import Flask, render_template, jsonify, session, redirect, request, url_for
 import uuid
 import pymongo
-from datetime import datetime
+from datetime import datetime, timedelta
 from passlib.hash import sha256_crypt
 import os
-client = pymongo.MongoClient("mongodb+srv://g0utham:Sg106271@cluster0-v0h6w.gcp.mongodb.net/?retryWrites=true&w=majority")
+
+client = pymongo.MongoClient(
+    "mongodb+srv://g0utham:Sg106271@cluster0-v0h6w.gcp.mongodb.net/?retryWrites=true&w=majority"
+)
 db = client.school_manage
+
 
 class User:
     def start_session(self, user):
-        del user['password']
-        session['start_time']=datetime.now()
-        session['logged_in'] = True
-        session['user'] = user
-        
-        return redirect('/#')
+        del user["password"]
+        session["start_time"] = datetime.now()
+        session["logged_in"] = True
+        session["user"] = user
+
+        return redirect("/#")
 
     def announce(self, announce, id):
-        announcement={
+        announcement = {
             "_id": uuid.uuid4().hex,
-            "title":announce.get('title'),
-            "content": announce.get('content'),
-            "posted by": id
+            "title": announce.get("title"),
+            "content": announce.get("content"),
+            "posted by": id,
         }
         if db.announcements.insert_one(announcement):
-            return redirect('/')
+            return redirect("/")
 
     def signout(self):
-        session['out_time']=datetime.now()
-        log={
-            'user':session['user'],
-            'start_time':session['start_time'],
-            'end_time':session['out_time']
+        session["out_time"] = datetime.now()
+        log = {
+            "user": session["user"],
+            "start_time": session["start_time"],
+            "end_time": session["out_time"],
         }
         db.user_log.insert_one(log)
         session.clear()
-        return redirect('/')
-    
+        return redirect("/")
+
     def add_user(self, details):
-        user={
+        user = {
             "_id": uuid.uuid4().hex,
-            "name": details.get('name'),
-            "username": details.get('username'),
-            "password": details.get('password'),
-            "role":details.get('role'),
-            "dob":details.get('dob'),
-            "gender":details.get('gender'),
-            "doa":details.get('doa'),
-            "mobile":details.get('mobile'),
-            "email":details.get('email'),
-            "class":details.get('class')
+            "name": details.get("name"),
+            "username": details.get("username"),
+            "password": details.get("password"),
+            "role": details.get("role"),
+            "dob": details.get("dob"),
+            "gender": details.get("gender"),
+            "doa": details.get("doa"),
+            "mobile": details.get("mobile"),
+            "email": details.get("email"),
+            "class": details.get("class"),
         }
-        user['password'] = sha256_crypt.hash(user['password'])
-        
-        if db.users.find_one({ "username": user['username'] }):
-            return jsonify({ "error": "ID already in use" }), 400
+        user["password"] = sha256_crypt.hash(user["password"])
+        user["username"] = user["username"].lower()
+
+        if db.users.find_one({"username": user["username"]}):
+            return jsonify({"error": "ID already in use"}), 400
 
         if db.users.insert_one(user):
             return self.start_session(user)
 
-        return jsonify({ "error": "Signup failed" }), 400
+        return jsonify({"error": "Signup failed"}), 400
 
     def stu_fee(self, fee):
         user = {
             "_id": uuid.uuid4().hex,
             "class": fee.get("class"),
-            "fee":fee.get('fee'),
+            "fee": fee.get("fee"),
         }
-        if db.feePerClass.find_one({ "class":user['class']}):
+        if db.feePerClass.find_one({"class": user["class"]}):
             db.feePerClass.update_one(user)
         if db.feePerClass.insert_one(user):
-            return redirect('/fee')
-        return redirect('/')
+            return redirect("/fee")
+        return redirect("/")
 
     def teacher_update(self):
         user = {
@@ -83,133 +88,194 @@ class User:
             "Mobile": "",
             "email": "",
             "emp_id": "",
-            "salary":""
+            "salary": "",
         }
         return jsonify(user)
 
     def marks(self):
         marks = {
             "_id": uuid.uuid4().hex,
-            "class_id":"",
+            "class_id": "",
             "exam_name": "",
             "sub_id": "",
-            "Reg_no": "",
         }
-    
+
     def courses(self, course):
-        course={
-            "_id":uuid.uuid4().hex,
-            "course_id":course.get('course_id'),
-            "class_id":course.get('class_id'),
-            "course_name":course.get('course_name'),
-            "class":course.get('class'),
-            "faculty_id":course.get('faculty_id'),
+        course = {
+            "_id": uuid.uuid4().hex,
+            "course_id": course.get("course_id"),
+            "class_id": course.get("class_id"),
+            "course_name": course.get("course_name"),
+            "class": course.get("class"),
+            "faculty_id": course.get("faculty_id"),
         }
-        course['students_enrolled']=[i["username"] for i in list(db.users.find({"class":"{}".format(course["class"])}))]
+        course["students_enrolled"] = [
+            i["username"]
+            for i in list(db.users.find({"class": "{}".format(course["class"])}))
+        ]
         db.courses.insert_one(course)
-        return redirect('/courses')
+        return redirect("/courses")
 
     def login(self):
-        user = db.users.find_one({
-            "username": request.form.get('username')
-        })
+        user = db.users.find_one({"username": request.form.get("username").lower()})
 
-        if user and sha256_crypt.verify(request.form.get('password'), user['password']):
+        if user and sha256_crypt.verify(request.form.get("password"), user["password"]):
             return self.start_session(user)
 
-        return redirect('/')
-        
+        return redirect("/")
 
-app=Flask(__name__)
 
-@app.route('/')
+app = Flask(__name__)
+
+
+@app.errorhandler(500)
+def server_error(e):
+    return redirect("/")
+
+
+@app.before_request
+def before_request():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=5)
+
+
+@app.route("/")
 def home():
     try:
-        if session['logged_in']:
-            return redirect(url_for('landin'))
+        if session["logged_in"]:
+            return redirect(url_for("landin"))
     except:
-        return render_template('login.html')
-@app.route('/#')
-def landin():
-    announce=list(db.announcements.find({}))
-    return render_template('landin.html', role= session['user']['role'], ann=announce)
+        return render_template("login.html")
 
-@app.route('/login', methods=['POST'])
+
+@app.route("/#")
+def landin():
+    announce = list(db.announcements.find({}))
+    if session["user"]["role"]=='student':
+        cls_mess=list(db.class_messages.find({}))
+        print(cls_mess)
+        return render_template("landin.html", role=session["user"]["role"], ann=announce, cls_msg=cls_mess)
+    return render_template("landin.html", role=session["user"]["role"], ann=announce)
+
+
+@app.route("/login", methods=["POST"])
 def login():
     return User().login()
 
-@app.route('/adduser', methods=['GET','POST'])
-def adduser():
-    return render_template('signup.html')
 
-@app.route('/logout')
+@app.route("/adduser", methods=["GET", "POST"])
+def adduser():
+    return render_template("signup.html")
+
+
+@app.route("/logout")
 def logout():
-    session['logged_in']=False
+    session["logged_in"] = False
     return User().signout()
 
-@app.route('/result', methods=['GET', 'POST'])
+
+@app.route("/result", methods=["GET", "POST"])
 def result():
-    result=request.form
+    result = request.form
 
     User().add_user(result)
-    print('user added')
-    if result['role']=='admin':
-        return redirect('/adduser')
+    if result["role"] == "admin":
+        return redirect("/adduser")
     else:
-        return redirect('/#')
+        return redirect("/#")
 
-@app.route('/marks')
+
+@app.route("/marks")
 def marks():
     pass
 
-@app.route('/post', methods=['POST','GET'])
+
+@app.route("/post", methods=["POST", "GET"])
 def announce():
-    ann=request.form
+    ann = request.form
     print(ann)
-    User().announce(ann, session['user']['username'])
-    return redirect('/')
+    User().announce(ann, session["user"]["username"])
+    return redirect("/")
 
-@app.route('/courses')
+
+# Courses assigned
+@app.route("/courses")
 def add_courses():
-    if session['user']['role']=='staff':
-        courses=db.courses.find({'faculty_id':"{}".format(session['user']['username'])})
-        return render_template('courses.html', courses=courses)
-    elif session['user']['role']!='admin':
-        courses=db.courses.find({'class':"{}".format(session['user']['class'])})
-        return render_template('courses.html', courses=courses)
-    return render_template('courses.html')
+    if session["user"]["role"] == "staff":
+        courses = db.courses.find(
+            {"faculty_id": "{}".format(session["user"]["username"])}
+        )
+        return render_template("courses.html", courses=courses)
+    elif session["user"]["role"] != "admin":
+        courses = db.courses.find({"class": "{}".format(session["user"]["class"])})
+        return render_template("courses.html", courses=courses)
+    return render_template("courses.html")
 
-@app.route('/set_courses', methods=['GET', "POST"])
+
+@app.route("/set_courses", methods=["GET", "POST"])
 def set_courses():
     User().courses(request.form)
-    return redirect('/courses')
+    return redirect("/courses")
 
-@app.route('/updates', methods=['POST', 'GET'])
+
+@app.route("/updates", methods=["POST", "GET"])
 def updates():
-    return render_template('announce.html', role=session['user']['role'], id=session['user']['username'])
+    return render_template(
+        "announce.html", role=session["user"]["role"], id=session["user"]["username"]
+    )
 
-@app.route('/details', methods=['GET', 'POST'])
+
+@app.route("/details", methods=["GET", "POST"])
 def get_details():
-    return jsonify(session['user'])
+    return jsonify(session["user"])
 
-@app.route('/fee')
+
+@app.route("/fee")
 def fee():
-    if session['user']['role']=="student":
-        fee_payable=db.feePerClass.find({'class':"{}".format(session['user']['class'])})
-        fee_payable=list(fee_payable)[0]
-        return render_template('fee.html', fee=fee_payable)
-    return render_template('fee.html')
+    if session["user"]["role"] == "student":
+        fee_payable = db.feePerClass.find(
+            {"class": "{}".format(session["user"]["class"])}
+        )
+        fee_payable = list(fee_payable)[0]
+        return render_template("fee.html", fee=fee_payable)
+    return render_template("fee.html")
 
-@app.route('/set_fee', methods=['GET', 'POST'])
+
+@app.route("/set_fee", methods=["GET", "POST"])
 def set_fee():
     User().stu_fee(request.form)
-    return redirect('/')
+    return redirect("/")
 
-@app.route('/construct')
+
+@app.route("/classmsg", methods=["GET", "POST"])
+def classmsg():
+    courses = db.courses.find({"faculty_id": "{}".format(session["user"]["username"])})
+    course_list = [i["course_name"] for i in courses]
+    return render_template(
+        "class_messages.html", course_list=course_list, n=len(course_list)
+    )
+
+
+@app.route("/postclsmsg", methods=["GET", "POST"])
+def postclsmsg():
+    message = request.form
+    new_message = {
+        "_id": uuid.uuid4().hex,
+        "course_name": message.get("course_name"),
+        "content": message.get("content"),
+        "priority": message.get("priority"),
+    }
+    db.class_messages.insert_one(new_message)
+    return redirect("/classmsg")
+
+
+@app.route("/construct")
 def construct():
-    return render_template('construct.html')
+    return render_template("construct.html")
 
-if __name__=='__main__':
-    app.secret_key="kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+
+if __name__ == "__main__":
+    app.secret_key = "kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
+
