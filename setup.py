@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="school2",  # Replace with your own username
-    version="0.0.1",
+    version="1.0.0",
     author="G0utham15",
     author_email="dsgr369@gmail.com",
     description="A all in one School app",

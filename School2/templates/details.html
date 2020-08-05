@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-<form action="{{ url_for('login') }}" method="POST" name="login_form">
+
     <ion-content>
         <ion-list>
             {% for i in session['user'].keys() %}
@@ -20,8 +20,8 @@
             </ion-item>
             {% endfor %}
         </ion-list>
+        <ion-button type="submit">Announce</ion-button>
     </ion-content>
-</form>
 
 
 {% endblock %}
