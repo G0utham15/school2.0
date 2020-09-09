@@ -1,73 +1,86 @@
-{% extends "base.html" %}
+{% extends "base-login.html" %}
 
 {% block head %}
-    <title>Login</title>
-    <link rel="stylesheet" href="https//stackpath.bootstrapcdn.com/bootswatch/4.5.0/cyborg/bootstrap.min.css">
+<title>Login</title>
 {% endblock %}
 
 {% block body %}
-<style>
-    * {
-  box-sizing: border-box;
-}
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-title>
+            <h1>Announcements</h1>
+          </ion-title>
 
-body {
-  background-color: #0f000f;
-}
+        </ion-card>
+      </ion-col>
+      <ion-col>
+        <ion-card>
+          <ion-title>
+            <h1>Login</h1>
+          </ion-title>
+          <form action="{{ url_for('login') }}" method="POST" name="login_form">
+            <ion-list>
+              <ion-item lines="none">
+                <ion-label position="floating">Username</ion-label>
+                <ion-input type="text" name="username" id="inpID"></ion-input>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label position="floating">Password</ion-label>
+                <ion-input type="password" name="password" id="inpPass"></ion-input>
+              </ion-item>
+            </ion-list>
+            <section>
+              <ion-button type="submit" id="login" expand="block" fill="clear">Submit</ion-button>
+            </section>
+          </form>
+        </ion-card>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col>
+        {% if err %}
+        <script></script>
+        <p>{{err}}</p>
+        {% endif %}
+        {% with messages=get_flashed_messages() %}
+        {% if messages %}
+        {% for i in messages %}
+        <ion-text>{{i}}</ion-text>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+  </ion-grid>
 
-.form {
-  background-color: #868c82;
-  width: 500px;
-  margin: 50px auto 10px auto;
-  padding: 30px;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px -3px #333;
-  text-align: center;
-}
-
-input {
-  border-radius: 5px;
-  padding: 10px 10px;
-  width: 50%;
-  border: 1px solid #D9D9D9;
-  outline: none;
-  display: block;
-  margin: 20px auto 10px auto;
-}
-
-.btn {
-  border-radius: 100px;
-  border: none;
-  background: #2d5cac;
-  width: 50%;
-  padding: 10px;
-  color: #FFFFFF;
-  margin-top: 25px;
-  box-shadow: 0 2px 10px -3px #719BE6;
-  display: block;
-  margin: 55px auto 10px auto;
-}
-</style>
-
-<div class="form"> 
-    <h1>Login</h1>          
-  <form action="{{ url_for('login') }}" method="POST" name="login_form">
-    
-                  <input type="text" name="username" class="field" placeholder="ID" required>
-  
-                  
-                  <input type="password" name="password" class="field" placeholder="Password" required>
-  
-                  <p class="error error--hidden"></p>
-  
-                  <input type="submit" value="Log In" class="btn">
-  
-              </form>
-     {% if err %}
-     <p>{{err}}</p>
-     {% endif %}
-  </div>
-
-    </div>
+</ion-content>
+<script>
+  var input = document.getElementById("inpID");
+  var inpPass = document.getElementById("inpPass");
+  // Execute a function when the user releases a key on the keyboard
+  input.addEventListener("keyup", function (event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+      // Cancel the default action, if needed
+      event.preventDefault();
+      // Trigger the button element with a click
+      document.getElementById("login").click();
+    }
+  });
+  inpPass.addEventListener("keyup", function (event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+      // Cancel the default action, if needed
+      event.preventDefault();
+      // Trigger the button element with a click
+      document.getElementById("login").click();
+    }
+  });
+</script>
 {% endblock %}

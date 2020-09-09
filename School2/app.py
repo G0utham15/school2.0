@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, session, redirect, request, url_for
+from flask import Flask, render_template, jsonify, session, redirect, request, url_for, flash
 import uuid
 import pymongo
 from datetime import datetime, timedelta
@@ -39,32 +39,9 @@ class User:
         }
         db.user_log.insert_one(log)
         session.clear()
+        flash("You have logged out successfully")
         return redirect("/")
 
-    def add_user(self, details):
-        user = {
-            "_id": uuid.uuid4().hex,
-            "name": details.get("name"),
-            "username": details.get("username"),
-            "password": details.get("password"),
-            "role": details.get("role"),
-            "dob": details.get("dob"),
-            "gender": details.get("gender"),
-            "doa": details.get("doa"),
-            "mobile": details.get("mobile"),
-            "email": details.get("email"),
-            "class": details.get("class"),
-        }
-        user["password"] = sha256_crypt.hash(user["password"])
-        user["username"] = user["username"].lower()
-
-        if db.users.find_one({"username": user["username"]}):
-            return jsonify({"error": "ID already in use"}), 400
-
-        if db.users.insert_one(user):
-            return self.start_session(user)
-
-        return jsonify({"error": "Signup failed"}), 400
 
     def stu_fee(self, fee):
         user = {
@@ -116,12 +93,38 @@ class User:
         db.courses.insert_one(course)
         return redirect("/courses")
 
+    def add_user(self, details):
+        user = {
+            "_id": details.get("username"),
+            "name": details.get("name"),
+            "username": details.get("username"),
+            "password": details.get("password"),
+            "role": details.get("role"),
+            "dob": details.get("dob"),
+            "gender": details.get("gender"),
+            "doa": details.get("doa"),
+            "mobile": details.get("mobile"),
+            "email": details.get("email"),
+            "class": details.get("class"),
+        }
+        user["password"] = sha256_crypt.hash(user["password"])
+        user["username"] = user["username"].lower()
+        
+        if db[user['class']].find_one({"username": user["username"]}):
+            return jsonify({"error": "ID already in use"}), 400
+        if db[user['class']].insert_one(user):
+            db.users.insert_one(user)
+            return redirect("/")
+
+        return jsonify({"error": "Signup failed"}), 400
+
+
     def login(self):
         user = db.users.find_one({"username": request.form.get("username").lower()})
 
         if user and sha256_crypt.verify(request.form.get("password"), user["password"]):
             return self.start_session(user)
-
+        flash("User not Found, Contact School Admin")
         return redirect("/")
 
 
@@ -130,6 +133,7 @@ app = Flask(__name__)
 
 @app.errorhandler(500)
 def server_error(e):
+    flash("Something went wrong please try again", 'error')
     return redirect("/")
 
 
@@ -278,7 +282,7 @@ def construct():
 if __name__ == "__main__":
     app.secret_key = "kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"
     port = int(os.environ.get("PORT", 5000))
-    debug=False
+    debug=True
     host="127.0.0.1" if debug else "0.0.0.0"
     app.run(host=host, port=port, debug=debug)
 

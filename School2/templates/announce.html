@@ -4,69 +4,42 @@
 
 {% endblock %}
 {% block body %}
-<style>
 
-    * {
-  box-sizing: border-box;
-}
-
-body {
-  background-color: #d1c3d1;
-}
-
-.form {
-  background-color: #ebeeea;
-  width: 700px;
-  margin: 50px auto 10px auto;
-  padding: 30px;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px -3px #333;
-  text-align: center;
-}
-
-input {
-  border-radius: 5px;
-  padding: 10px 10px;
-  width: 50%;
-  border: 1px solid #D9D9D9;
-  outline: none;
-  display: block;
-  margin: 20px auto 10px auto;
-}
-
-.btn {
-  border-radius: 100px;
-  border: none;
-  background: #2d5cac;
-  width: 50%;
-  padding: 10px;
-  color: #FFFFFF;
-  margin-top: 25px;
-  box-shadow: 0 2px 10px -3px #719BE6;
-  display: block;
-  margin: 55px auto 10px auto;
-}
-</style>
 {% if role == 'admin' %}
+<ion-content>
+  <ion-grid>
+    <ion-row></ion-row>
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col>
+        <ion-card>
+          <div class="form">
+            <ion-title class="list-group-item active">
+              <h1>Announce</h1>
+            </ion-title>
+            <form action="{{url_for('announce')}}" method="POST" name="announce_form">
 
-            <div class="form">        
-              <h1 class="center">Make Announcements</h1>
-              <form action="{{url_for('announce')}}" method="POST" name="announce_form">
+              <ion-item lines="none">
+                <ion-label position="floating">Title</ion-label>
+                <ion-textarea name="title"></ion-textarea>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label position="floating">Description</ion-label>
+                <ion-textarea autoGrow="true" name="content"></ion-textarea>
+              </ion-item>
+              <ion-button type="submit" expand="block" fill="blank">Announce</ion-button>
+            </form>
 
-                <ion-item>
-                  <ion-label position="floating">Title</ion-label>
-                  <ion-textarea name="title"></ion-textarea>
-                </ion-item>
-                  <ion-item>
-                    <ion-label position="floating">Description</ion-label>
-                    <ion-textarea autoGrow="true" name="content"></ion-textarea>
-                  </ion-item>
-                  <input type="submit" value="Announce" class="btn">
-      
-              </form>
-               
-            </div>
+          </div>
+
+        </ion-card>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+
+  </ion-grid>
+</ion-content>
+
 
 {% endif %}
 </ion-app>
