@@ -6,22 +6,34 @@
 {% block body %}
 
     <ion-content>
+        
         <ion-list>
-            {% for i in session['user'].keys() %}
-            <ion-item>
-                <ion-col>
-                    <h4>{{i}}</h4>
-                </ion-col>
-                <ion-col></ion-col>
-                <ion-col>
-                    <ion-input placeholder="{{session['user'][i]}}"></ion-input>
-                </ion-col>
-                <ion-col></ion-col>
+            <ion-list-header>
+                <h1>Details</h1>
+            </ion-list-header>
+            <ion-item lines="none">
+                    <ion-col><ion-text><h5>Username</h5></ion-text></ion-col>
+                    <ion-col><ion-text><h5>{{session['user']['_id']}}</h5></ion-text></ion-col>
             </ion-item>
-            {% endfor %}
+            <ion-item lines="none">
+                <ion-col><ion-text><h5>Name</h5></ion-text></ion-col>
+                <ion-col><ion-text><h5>{{session['user']['name']}}</h5></ion-text></ion-col>
+            </ion-item>
+            {% if role=="student" %}
+            <ion-item lines="none">
+                <ion-col><ion-text><h5>Class</h5></ion-text></ion-col>
+                <ion-col><ion-text><h5>{{session['user']['class']}}</h5></ion-text></ion-col>
+            </ion-item>
+            {% endif %}
+            <ion-item lines="none">
+                <ion-col><ion-text><h5>Email ID</h5></ion-text></ion-col>
+                <ion-col><ion-text><h5>{{session['user']['email']}}</h5></ion-text></ion-col>
+            </ion-item>
+            <ion-item lines="none">
+                <ion-col><ion-text><h5>Mobile</h5></ion-text></ion-col>
+                <ion-col><ion-text><h5>{{session['user']['mobile']}}</h5></ion-text></ion-col>
+            </ion-item>
         </ion-list>
-        <ion-button type="submit">Announce</ion-button>
-    </ion-content>
-
-
+        <ion-button href="{{url_for('home')}}">Back</ion-button>
+</ion-content>
 {% endblock %}

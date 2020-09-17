@@ -13,11 +13,9 @@ db = client.school_manage
 
 class User:
     def start_session(self, user):
-        del user["password"]
-        session["start_time"] = datetime.now()
         session["logged_in"] = True
         session["user"] = user
-
+        print("Session Started")
         return redirect("/#")
 
     def announce(self, announce, id):
@@ -25,19 +23,13 @@ class User:
             "_id": uuid.uuid4().hex,
             "title": announce.get("title"),
             "content": announce.get("content"),
+            "Priority":announce.get("priority"),
             "posted by": id,
         }
         if db.announcements.insert_one(announcement):
             return redirect("/")
 
     def signout(self):
-        session["out_time"] = datetime.now()
-        log = {
-            "user": session["user"],
-            "start_time": session["start_time"],
-            "end_time": session["out_time"],
-        }
-        db.user_log.insert_one(log)
         session.clear()
         flash("You have logged out successfully")
         return redirect("/")
@@ -54,20 +46,6 @@ class User:
         if db.feePerClass.insert_one(user):
             return redirect("/fee")
         return redirect("/")
-
-    def teacher_update(self):
-        user = {
-            "_id": "",
-            "Name": "",
-            "DOB": "",
-            "Gender": "",
-            "DOA": "",
-            "Mobile": "",
-            "email": "",
-            "emp_id": "",
-            "salary": "",
-        }
-        return jsonify(user)
 
     def marks(self):
         marks = {
@@ -97,8 +75,6 @@ class User:
         user = {
             "_id": details.get("username"),
             "name": details.get("name"),
-            "username": details.get("username"),
-            "password": details.get("password"),
             "role": details.get("role"),
             "dob": details.get("dob"),
             "gender": details.get("gender"),
@@ -107,23 +83,28 @@ class User:
             "email": details.get("email"),
             "class": details.get("class"),
         }
-        user["password"] = sha256_crypt.hash(user["password"])
-        user["username"] = user["username"].lower()
-        
-        if db[user['class']].find_one({"username": user["username"]}):
-            return jsonify({"error": "ID already in use"}), 400
-        if db[user['class']].insert_one(user):
-            db.users.insert_one(user)
-            return redirect("/")
+        cred={
+            "_id": details.get("username"),
+            "username": details.get("username").lower(),
+            "password": sha256_crypt.hash(details.get("password")),
+        }
+        try:
+            if db.cred.find_one({"username": user["username"]}):
+                return jsonify({"error": "ID already in use"}), 400
+        except:
+            if db.cred.insert_one(cred):
+                db.user_details.insert_one(user)
+                if user['role']=='student':
+                    db[user['class']].insert_one(user)
+                return redirect("/")
 
         return jsonify({"error": "Signup failed"}), 400
 
 
     def login(self):
-        user = db.users.find_one({"username": request.form.get("username").lower()})
-
-        if user and sha256_crypt.verify(request.form.get("password"), user["password"]):
-            return self.start_session(user)
+        cred = db.cred.find_one({"username": request.form.get("username").lower()})
+        if cred and sha256_crypt.verify(request.form.get("password"), cred["password"]):
+            return self.start_session(db.user_details.find_one({"_id": cred['username']}))
         flash("User not Found, Contact School Admin")
         return redirect("/")
 
@@ -140,7 +121,8 @@ def server_error(e):
 @app.before_request
 def before_request():
     session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=5)
+    if debug==False:
+        app.permanent_session_lifetime = timedelta(minutes=5)
 
 
 @app.route("/")
@@ -155,9 +137,9 @@ def home():
 @app.route("/#")
 def landin():
     announce = list(db.announcements.find({}))
+    print("page Landed")
     if session["user"]["role"]=='student':
         cls_mess=list(db.class_messages.find({}))
-        print(cls_mess)
         return render_template("landin.html", role=session["user"]["role"], ann=announce, cls_msg=cls_mess)
     return render_template("landin.html", role=session["user"]["role"], ann=announce)
 
@@ -181,7 +163,6 @@ def logout():
 @app.route("/result", methods=["GET", "POST"])
 def result():
     result = request.form
-
     User().add_user(result)
     if result["role"] == "admin":
         return redirect("/adduser")
@@ -198,7 +179,7 @@ def marks():
 def announce():
     ann = request.form
     print(ann)
-    User().announce(ann, session["user"]["username"])
+    User().announce(ann, session["user"]["_id"])
     return redirect("/")
 
 
@@ -207,7 +188,7 @@ def announce():
 def add_courses():
     if session["user"]["role"] == "staff":
         courses = db.courses.find(
-            {"faculty_id": "{}".format(session["user"]["username"])}
+            {"faculty_id": "{}".format(session["user"]["_id"])}
         )
         return render_template("courses.html", courses=courses)
     elif session["user"]["role"] != "admin":
@@ -225,7 +206,7 @@ def set_courses():
 @app.route("/updates", methods=["POST", "GET"])
 def updates():
     return render_template(
-        "announce.html", role=session["user"]["role"], id=session["user"]["username"]
+        "announce.html", role=session["user"]["role"], id=session["user"]["_id"]
     )
 
 
@@ -285,4 +266,3 @@ if __name__ == "__main__":
     debug=False
     host="127.0.0.1" if debug else "0.0.0.0"
     app.run(host=host, port=port, debug=debug)
-

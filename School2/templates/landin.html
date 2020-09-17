@@ -21,14 +21,36 @@
           <ion-title class="list-group-item active">
             <h1>Announcements</h1>
           </ion-title>
-          {% for key in ann %}
-          <ion-item>
-            <ion-label>
+          <ion-item-group>
+            <ion-item-divider>
+              <ion-label>Urgent</ion-label>
+            </ion-item-divider>
+            {% for key in ann %}
+            {% if key['Priority']=='Urgent' %}
+            <ion-item lines="none">
+              <ion-label>
               <h1>{{ key['title'] }}</h1>
               <h5>{{ key['content'] }}</h5>
-            </ion-label>
-          </ion-item>
-          {% endfor %}
+              </ion-label>
+            </ion-item>
+            {% endif %}
+            {% endfor %}
+          </ion-item-group>
+          <ion-item-group>
+            <ion-item-divider>
+              <ion-label>Normal</ion-label>
+            </ion-item-divider>
+            {% for key in ann %}
+            {% if key['Priority']!='Urgent' %}
+            <ion-item lines="none">
+              <ion-label>
+              <h1>{{ key['title'] }}</h1>
+              <h5>{{ key['content'] }}</h5>
+              </ion-label>
+            </ion-item>
+            {% endif %}
+            {% endfor %}
+          </ion-item-group>
         </ion-card>
       </ion-col>
       {% if session['user']['username']=='admin' %}
