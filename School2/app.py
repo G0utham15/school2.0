@@ -24,6 +24,7 @@ class User:
             "title": announce.get("title"),
             "content": announce.get("content"),
             "Priority":announce.get("priority"),
+            "class_id":announce.get("class"),
             "posted by": id,
         }
         if db.announcements.insert_one(announcement):
@@ -59,14 +60,13 @@ class User:
         course = {
             "_id": uuid.uuid4().hex,
             "course_id": course.get("course_id"),
-            "class_id": course.get("class_id"),
-            "course_name": course.get("course_name"),
             "class": course.get("class"),
+            "course_name": course.get("course_name"),
             "faculty_id": course.get("faculty_id"),
         }
         course["students_enrolled"] = [
-            i["username"]
-            for i in list(db.users.find({"class": "{}".format(course["class"])}))
+            i["_id"]
+            for i in list(db[course['class']].find({}))
         ]
         db.courses.insert_one(course)
         return redirect("/courses")
@@ -88,6 +88,11 @@ class User:
             "username": details.get("username").lower(),
             "password": sha256_crypt.hash(details.get("password")),
         }
+        user_det={
+            "_id":user['_id'],
+            "name":user['name'],
+            'class_id':user['class']
+        }
         try:
             if db.cred.find_one({"username": user["username"]}):
                 return jsonify({"error": "ID already in use"}), 400
@@ -95,9 +100,8 @@ class User:
             if db.cred.insert_one(cred):
                 db.user_details.insert_one(user)
                 if user['role']=='student':
-                    db[user['class']].insert_one(user)
-                return redirect("/")
-
+                    db[user['class']].insert_one(user_det)
+                return redirect("/adduser")
         return jsonify({"error": "Signup failed"}), 400
 
 
@@ -107,7 +111,6 @@ class User:
             return self.start_session(db.user_details.find_one({"_id": cred['username']}))
         flash("User not Found, Contact School Admin")
         return redirect("/")
-
 
 app = Flask(__name__)
 
@@ -196,6 +199,10 @@ def add_courses():
         return render_template("courses.html", courses=courses)
     return render_template("courses.html")
 
+@app.route('/assign_staff')
+def assign_staff():
+    if session['user']['role']=='admin':
+        pass
 
 @app.route("/set_courses", methods=["GET", "POST"])
 def set_courses():
@@ -209,6 +216,10 @@ def updates():
         "announce.html", role=session["user"]["role"], id=session["user"]["_id"]
     )
 
+@app.route("/user")
+def user():
+    users=list(db.user_details.find({}))
+    return render_template('user_search.html', users=users)
 
 @app.route("/details", methods=["GET", "POST"])
 def get_details():
@@ -235,7 +246,7 @@ def set_fee():
 
 @app.route("/classmsg", methods=["GET", "POST"])
 def classmsg():
-    courses = db.courses.find({"faculty_id": "{}".format(session["user"]["username"])})
+    courses = db.courses.find({"faculty_id": "{}".format(session["user"]["_id"])})
     course_list = [i["course_name"] for i in courses]
     return render_template(
         "class_messages.html", course_list=course_list, n=len(course_list)
@@ -245,6 +256,7 @@ def classmsg():
 @app.route("/postclsmsg", methods=["GET", "POST"])
 def postclsmsg():
     message = request.form
+    print(message)
     new_message = {
         "_id": uuid.uuid4().hex,
         "course_name": message.get("course_name"),
@@ -252,7 +264,7 @@ def postclsmsg():
         "priority": message.get("priority"),
     }
     db.class_messages.insert_one(new_message)
-    return redirect("/classmsg")
+    return redirect("/")
 
 
 @app.route("/construct")

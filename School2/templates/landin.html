@@ -26,7 +26,7 @@
               <ion-label>Urgent</ion-label>
             </ion-item-divider>
             {% for key in ann %}
-            {% if key['Priority']=='Urgent' %}
+            {% if key['Priority']=='Urgent' and key['class_id']=='all' %}
             <ion-item lines="none">
               <ion-label>
               <h1>{{ key['title'] }}</h1>
@@ -41,7 +41,7 @@
               <ion-label>Normal</ion-label>
             </ion-item-divider>
             {% for key in ann %}
-            {% if key['Priority']!='Urgent' %}
+            {% if key['Priority']!='Urgent' and key['class_id']=='all'%}
             <ion-item lines="none">
               <ion-label>
               <h1>{{ key['title'] }}</h1>
@@ -60,12 +60,7 @@
         </ion-card>
       </ioncol>
       {% endif %}
-      <ion-col>
-        <h5>Hello {{session['user']['name']}}</h5>
-      </ion-col>
-    </ion-row>
-    {% if session['user']['role']=='student' %}
-    <ion-row>
+      {% if session['user']['role']=='student' %}
       <ion-col>
         <ion-card>
           <ion-title class="list-group-item active">
@@ -82,8 +77,11 @@
           {% endfor %}
         </ion-card>
       </ion-col>
-    </ion-row>
     {% endif %}
+      <ion-col>
+        <h5>Hello {{session['user']['name']}}</h5>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>
 

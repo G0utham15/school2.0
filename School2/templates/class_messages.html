@@ -3,48 +3,59 @@
 <title>Class Messages</title>
 {% endblock %}
 {% block body %}
-{% if  session['user']['role']=='staff' %}
+
+{% if session['user']['role']=='staff' %}
 <ion-content>
     <ion-grid>
-        <ion-row>
-            <ion-col>
-                <ion-card>
-                    <ion-content>
-                        <h1 text-align="center">Class Messages</h1>
-                    </ion-content>
-
-                    <form action="{{ url_for('postclsmsg') }}" method="POST" name="login_form">
-
-                        <ion-item>
-                            <ion-label>Course Name</ion-label>
-                            <ion-select name="course_name" aria-required="required">
-                                {% for i in course_list %}
-                                <ion-select-option value="{{i}}">{{i}}</ion-select-option>
-                                {% endfor %}
-                            </ion-select>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label position="floating">Description</ion-label>
-                            <ion-textarea autoGrow="true" name="content" required></ion-textarea>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label>Priority</ion-label>
-                            <ion-select name="priority" aria-required="required">
-                                <ion-select-option value="urgent">Urgent</ion-select-option>
-                                <ion-select-option value="important">Important</ion-select-option>
-                                <ion-select-option value="normal">Normal</ion-select-option>
-
-                            </ion-select>
-                        </ion-item>
-                        <ion-button type="submit" value="Announce">Announce</ion-button>
-
-                    </form>
-                </ion-card>
-            </ion-col>
-        </ion-row>
+      <ion-row>
+        <ion-col></ion-col>
+        <ion-col>
+          <ion-card>
+              <ion-title class="list-group-item active">
+                <h1>Class Message</h1>
+              </ion-title>
+              <form action="{{ url_for('postclsmsg') }}" method="POST" name="login_form"></form>
+  
+                <ion-item lines="none">
+                  <ion-label position="floating">Title</ion-label>
+                  <ion-textarea name="title"></ion-textarea>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-label position="floating">Description</ion-label>
+                  <ion-textarea autoGrow="true" name="content"></ion-textarea>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-label for="priority">Priority</ion-label>
+                  <ion-select name="priority" id="priority" interface="popover">
+                    <ion-select-option value="Urgent">Urgent</ion-select-option>>
+                    <ion-select-option value="Normal">Normal</ion-select-option>>
+                    </select>
+                </ion-item>
+  
+                <ion-item lines="none">
+                  <ion-label>Class</ion-label>
+                  <ion-select name="class">
+                      <ion-select-option value="cls_1">1</ion-select-option>
+                      <ion-select-option value="cls_2">2</ion-select-option>
+                      <ion-select-option value="cls_3">3</ion-select-option>
+                      <ion-select-option value="cls_4">4</ion-select-option>
+                      <ion-select-option value="cls_5">5</ion-select-option>
+                      <ion-select-option value="cls_6">6</ion-select-option>
+                      <ion-select-option value="cls_7">7</ion-select-option>
+                      <ion-select-option value="cls_8">8</ion-select-option>
+                      <ion-select-option value="cls_9">9</ion-select-option>
+                      <ion-select-option value="cls_10">10</ion-select-option>
+                  </ion-select>
+              </ion-item>
+  
+                <ion-button type="submit" expand="block" fill="blank">Announce</ion-button>
+              </form>
+          </ion-card>
+        </ion-col>
+        <ion-col></ion-col>
+      </ion-row>
+  
     </ion-grid>
-</ion-content>
-{% else %}
-
+  </ion-content>
 {% endif %}
 {% endblock %}

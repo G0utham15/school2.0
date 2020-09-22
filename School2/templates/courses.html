@@ -2,141 +2,113 @@
 
 {% block head %}
 <title>Welcome {{role}}</title>
-<style>
-    :root {
-        --ion-safe-area-top: 20px;
-        --ion-safe-area-bottom: 22px;
-    }
-
-    ion-col>div {
-        background-color: #f7f7f7;
-        border: solid 1px #ddd;
-        padding: 10px;
-    }
-</style>
 {% endblock %}
 {% block body %}
-{% if session['user']['role'] == 'student' %}
-<ion-content>
-    <ion-grid>
-        <ion-row>
-            <ion-col></ion-col>
-            <ion-col>
-                <h1>Courses assigned</h1>
-            </ion-col>
-            <ion-col></ion-col>
-        </ion-row>
-
-
-        <ion-list>
-            <ion-item>
-                <ion-row>
-                    <div>
-                        <ion-col>Course Name</ion-col>
-                        <ion-col>Course ID</ion-col>
-                        <ion-col>Class ID</ion-col>
-                    </div>
-
-                </ion-row>
-            </ion-item>
-        </ion-list>
-
-        {% for i in courses %}
-
-        <ion-list>
-            <ion-item>
-                <ion-row>
-                    <div>
-                        <ion-col>{{i['course_name']}}</ion-col>
-                        <ion-col>{{i['course_id']}}</ion-col>
-                        <ion-col>{{i['class_id']}}</ion-col>
-                    </div>
-                </ion-row>
-            </ion-item>
-        </ion-list>
-    </ion-grid>
-    {% endfor %}
-    {% elif session['user']['role'] == 'staff' %}
-    <ion-content>
-        <ion-grid>
-            <ion-row>
-                <ion-col></ion-col>
-                <ion-col>
-                    <h1>Courses assigned</h1>
-                </ion-col>
-                <ion-col></ion-col>
-            </ion-row>
-
-
-            <ion-list>
-                <ion-item>
-                    <ion-row>
-                        <div>
+    {% if session['user']['role'] == 'student' %}
+        <ion-content>
+            <ion-grid>
+                <ion-card>
+                    <ion-title class="list-group-item active">
+                        <h1>Courses</h1>
+                    </ion-title>
+                    <ion-list>
+                        <ion-item>
                             <ion-col>Course Name</ion-col>
                             <ion-col>Course ID</ion-col>
                             <ion-col>Class ID</ion-col>
-                        </div>
-
-                    </ion-row>
-                </ion-item>
-            </ion-list>
-
-            {% for i in courses %}
-
-            <ion-list>
-                <ion-item>
-                    <ion-row>
-                        <div>
+                            <ion-col>Faculty</ion-col>
+                        </ion-item>
+                    </ion-list>
+                    <ion-list>
+                        {% for i in courses %}
+                        <ion-item lines='none'>
                             <ion-col>{{i['course_name']}}</ion-col>
                             <ion-col>{{i['course_id']}}</ion-col>
-                            <ion-col>{{i['class_id']}}</ion-col>
-                        </div>
-                    </ion-row>
-                </ion-item>
-            </ion-list>
-        </ion-grid>
-
-        {% endfor %}
-    </ion-content>
+                            <ion-col>{{i['class']}}</ion-col>
+                            <ion-col>{{i['faculty_id']}}</ion-col>
+                        </ion-item>
+                        {% endfor %}
+                    </ion-list>
+            </ion-grid>
+            </ion-card>
+        </ion-content>
+    {% elif session['user']['role'] == 'staff' %}
+        <ion-content>
+            <ion-grid>
+                <ion-card>
+                    <ion-title class="list-group-item active">
+                        <h1>Courses</h1>
+                    </ion-title>
+                    <ion-list>
+                        <ion-item>
+                            <ion-col>Course Name</ion-col>
+                            <ion-col>Course ID</ion-col>
+                            <ion-col>Class ID</ion-col>
+                            <ion-col>Total Students</ion-col>
+                        
+                        </ion-item>
+                    </ion-list>
+                    <ion-list>
+                        {% for i in courses %}
+                        <ion-item lines='none'>
+                            <ion-col>{{i['course_name']}}</ion-col>
+                            <ion-col>{{i['course_id']}}</ion-col>
+                            <ion-col>{{i['class']}}</ion-col>
+                            <ion-col>{{i['students_enrolled']|length}}</ion-col>
+                        </ion-item>
+                        {% endfor %}
+                    </ion-list>
+            </ion-grid>
+            </ion-card>
+        </ion-content>
     {% elif session['user']['role'] == 'admin' %}
-    <ion-content>
-        <ion-card>
-            <form action="{{ url_for('set_courses') }}" method="POST" name="course_form">
-
-                <ion-item>
-                    <ion-label for="course_id">Course ID</ion-label>
-                    <input type="text" name="course_id" class="field" required>
-                </ion-item>
-
-                <ion-item>
-                    <label for="class_id">Class ID</label>
-                    <input type="text" name="class_id" class="field" required>
-                </ion-item>
-
-                <ion-list>
-                    <ion-item>
-                        <label for="course_name">Name of the course</label>
-                        <input type="text" name="course_name" class="field" required>
-                    </ion-item>
-
-                    <ion-item>
-                        <label for="class">Class</label>
-                        <input type="number" name="class" class="field" required>
-                    </ion-item>
-
-                    <ion-item>
-                        <label for="faculty_id">faculty</label>
-                        <input type="text" name="faculty_id" class="field" required>
-                    </ion-item>
-
-                    <p class="error error--hidden"></p>
-                    <ion-item>
-                        <ion-button type="submit" value="Assign">Assign</ion-button>
-                    </ion-item>
-
-
-            </form>
-        </ion-card>
-    </ion-content>
+        <ion-content>
+            <ion-grid>
+                <ion-row>
+                    <ion-col></ion-col>
+                    <ion-col>
+                        <ion-card>
+                            <form action="{{ url_for('set_courses') }}" method="POST" name="course_form">
+                            
+                                <ion-item lines='none'>
+                                    <ion-label for="course_id">Course ID</ion-label>
+                                    <ion-input type="text" name="course_id" class="field">
+                                </ion-item>
+                            
+                                <ion-item lines="none">
+                                    <ion-label>Class</ion-label>
+                                    <ion-select name="class">
+                                        <ion-select-option value="cls_1">1</ion-select-option>
+                                        <ion-select-option value="cls_2">2</ion-select-option>
+                                        <ion-select-option value="cls_3">3</ion-select-option>
+                                        <ion-select-option value="cls_4">4</ion-select-option>
+                                        <ion-select-option value="cls_5">5</ion-select-option>
+                                        <ion-select-option value="cls_6">6</ion-select-option>
+                                        <ion-select-option value="cls_7">7</ion-select-option>
+                                        <ion-select-option value="cls_8">8</ion-select-option>
+                                        <ion-select-option value="cls_9">9</ion-select-option>
+                                        <ion-select-option value="cls_10">10</ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                            
+                                <ion-item lines='none'>
+                                    <ion-label for="course_name">course Name</ion-label>
+                                    <ion-input type="text" name="course_name" class="field">
+                                </ion-item>
+                            
+                                <ion-item lines='none'>
+                                    <ion-label for="faculty_id">faculty</ion-label>
+                                    <ion-input type="text" name="faculty_id" class="field">
+                                </ion-item>
+                            
+                                <ion-button type="submit" value="Assign">Assign</ion-button>
+                            
+                            </form>
+                        </ion-card>
+                    </ion-col>
+                    <ion-col></ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-content>
     {% endif %}
-    {% endblock %}
+{% endblock %}
