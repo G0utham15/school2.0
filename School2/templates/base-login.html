@@ -21,7 +21,7 @@
       <ion-header>
         <ion-toolbar translucent>
           <ion-title>
-            <ion-button fill="clear" href="{{url_for('home')}}">School2</ion-button>
+            <ion-text><h2>Menu</h2></ion-text>
           </ion-title>
         </ion-toolbar>
       </ion-header>
@@ -63,47 +63,12 @@
             <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Assignments</ion-button>
           </ion-item>
           <ion-item>
-            <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Results</ion-button>
+            <ion-button expand="block" fill="clear" href="{{ url_for('results') }}">Results</ion-button>
           </ion-item>
           <ion-item>
             <ion-button expand="block" fill="clear" href="{{ url_for('home') }}">Class Messages</ion-button>
           </ion-item>
-          <ion-item>
-            <ion-button expand="block" fill="clear" href="{{ url_for('get_details') }}">Update Details</ion-button>
-          </ion-item>
-
-          <ion-button expand="block" fill="clear" color="danger" href="{{ url_for('logout') }}">Logout</ion-button>
-
-          {% elif role == 'parent' %}
-          <ion-item>
-            <ion-avatar slot="start">
-              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-            </ion-avatar>
-            <ion-button fill="clear" onclick="window.location.href='{{ url_for('get_details') }}';">
-              {{session['user']['name']}}</ion-label>
-          </ion-item>
-          </ion-item>
-          <ion-item>
-            <ion-button expand="block" fill="clear" href="{{ url_for('home') }}">Announcements</ion-button>
-          </ion-item>
-          <ion-item>
-            <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Attendance</ion-button>
-          </ion-item>
-          <ion-item>
-            <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Marks</ion-button>
-          </ion-item>
-
-          <ion-item>
-            <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Fee Recipts</ion-button>
-          </ion-item>
-          <ion-item>
-            <ion-button expand="block" fill="clear" href="{{ url_for('get_details') }}">Update Details</ion-button>
-          </ion-item>
-          <ion-item>
-            <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Complaints</ion-button>
-          </ion-item>
-          <ion-button expand="block" fill="clear" color="danger" href="{{ url_for('logout') }}">Logout</ion-button>
-
+          
           {% elif role == 'staff' %}
           <ion-item>
             <ion-avatar slot="start">
@@ -126,7 +91,7 @@
             <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Assignments</ion-button>
           </ion-item>
           <ion-item>
-            <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Results</ion-button>
+            <ion-button expand="block" fill="clear" href="{{ url_for('results') }}">Results</ion-button>
           </ion-item>
           <ion-item>
             <ion-button expand="block" fill="clear" href="{{url_for('user')}}">User Search</ion-button>
@@ -134,11 +99,7 @@
           <ion-item>
             <ion-button expand="block" fill="clear" href="{{url_for('classmsg')}}">Class Messages</ion-button>
           </ion-item>
-          <ion-item>
-            <ion-button expand="block" fill="clear" href="{{ url_for('get_details') }}">Update Details</ion-button>
-          </ion-item>
 
-          <ion-button expand="block" fill="clear" color="danger" href="{{ url_for('logout') }}">Logout</ion-button>
           {% elif role == 'admin' %}
           <ion-item>
             <ion-avatar slot="start">
@@ -167,12 +128,14 @@
             <ion-button expand="block" fill="clear" href="{{url_for('user')}}">Search Users</ion-button>
           </ion-item>
 
-          <ion-item>
-            <ion-button expand="block" fill="clear" href="{{ url_for('get_details') }}">Update Details</ion-button>
+          {% endif %}
+
+          <ion-item lines='none'>
+            <ion-button expand="block" fill="clear" href="{{ url_for('get_details') }}">User Details</ion-button>
           </ion-item>
 
-          <ion-button expand="block" fill="clear" color="danger" href="{{ url_for('logout') }}">Logout</ion-button>
-          {% endif %}
+          <ion-button expand="block" fill="outline" color="danger" href="{{ url_for('logout') }}">Logout</ion-button>
+
         </ion-list>
       </ion-content>
     </ion-menu>
@@ -183,7 +146,10 @@
           <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
           </ion-buttons>
-          <ion-title>School2</ion-title>
+          <ion-button fill="clear" href="{{url_for('home')}}"><ion-title>School2</ion-title></ion-button>
+          <ion-button fill="clear" slot="end">
+            <ion-icon name="person-circle-outline"></ion-icon>
+        </ion-button>
         </ion-toolbar>
       </ion-header>
       {% block body %}

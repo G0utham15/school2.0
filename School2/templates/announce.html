@@ -20,11 +20,11 @@
             <form action="{{url_for('announce')}}" method="POST" name="announce_form">
 
               <ion-item lines="none">
-                <ion-label position="floating">Title</ion-label>
+                <ion-label position="floating" required=true>Title</ion-label>
                 <ion-textarea name="title"></ion-textarea>
               </ion-item>
               <ion-item lines="none">
-                <ion-label position="floating">Description</ion-label>
+                <ion-label position="floating" required=true>Description</ion-label>
                 <ion-textarea autoGrow="true" name="content"></ion-textarea>
               </ion-item>
               <ion-item lines="none">
@@ -67,5 +67,4 @@
 
 
 {% endif %}
-</ion-app>
 {% endblock %}
