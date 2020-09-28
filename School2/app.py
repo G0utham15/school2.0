@@ -121,7 +121,8 @@ class User:
         db.results.insert_one(result)
 
 def is_human(captcha_response):
-    secret = "6LdMW9EZAAAAABzv_SguBzMlqgdOOkDPnJcKRbzb"
+    if debug==False:
+        secret = "6LdMW9EZAAAAABzv_SguBzMlqgdOOkDPnJcKRbzb" 
     payload = {'response':captcha_response, 'secret':secret}
     response = requests.post("https://www.google.com/recaptcha/api/siteverify", payload)
     response_text = json.loads(response.text)
@@ -348,6 +349,6 @@ def resupdatepass():
 if __name__ == "__main__":
     app.secret_key = "kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"
     port = int(os.environ.get("PORT", 5000))
-    debug = False
+    debug = True
     host = "127.0.0.1" if debug else "0.0.0.0"
     app.run(host=host, port=port, debug=debug)
