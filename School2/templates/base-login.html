@@ -7,10 +7,13 @@
   <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
   <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
-  <script src="../static/node_modules/chartjs/chart.js/dist/Chart.js"></script>
-  <script src="../static/node_modules/chartjs/chart.js/dist/Chart.min.js"></script>
+  <script src="https://www.jsdelivr.com/package/npm/chart.js?path=dist"></script>
   <link rel="stylesheet" href="../static/css/dark.css" />
-
+  </style>
+  <script type="module">
+    import { popoverController } from 'https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/index.esm.js';
+    window.popoverController = popoverController;
+  </script>
   {% block head %}{% endblock %}
 </head>
 
@@ -21,7 +24,9 @@
       <ion-header>
         <ion-toolbar translucent>
           <ion-title>
-            <ion-text><h2>Menu</h2></ion-text>
+            <ion-text>
+              <h2>Menu</h2>
+            </ion-text>
           </ion-title>
         </ion-toolbar>
       </ion-header>
@@ -35,14 +40,6 @@
         </ion-item>
         <ion-list>
           {% if role == 'student' %}
-          <ion-item>
-            <ion-avatar slot="start">
-              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-            </ion-avatar>
-            <ion-button fill="clear" onclick="window.location.href='{{ url_for('get_details') }}';">
-              {{session['user']['name']}}
-            </ion-button>
-          </ion-item>
           </ion-item>
           <ion-item>
             <ion-button expand="block" fill="clear" href="{{ url_for('home') }}">Announcements</ion-button>
@@ -68,15 +65,8 @@
           <ion-item>
             <ion-button expand="block" fill="clear" href="{{ url_for('home') }}">Class Messages</ion-button>
           </ion-item>
-          
+
           {% elif role == 'staff' %}
-          <ion-item>
-            <ion-avatar slot="start">
-              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-            </ion-avatar>
-            <ion-button fill="clear" onclick="window.location.href='{{ url_for('get_details') }}';">
-              {{session['user']['name']}}</ion-label>
-          </ion-item>
           </ion-item>
           <ion-item>
             <ion-button expand="block" fill="clear" href="{{ url_for('construct') }}">Timetable</ion-button>
@@ -102,14 +92,6 @@
 
           {% elif role == 'admin' %}
           <ion-item>
-            <ion-avatar slot="start">
-              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-            </ion-avatar>
-            <ion-button fill="clear" onclick="window.location.href='{{ url_for('get_details') }}';">
-              {{session['user']['name']}}</ion-label>
-          </ion-item>
-
-          <ion-item>
             <ion-button expand="block" fill="clear" href="{{ url_for('updates') }}">Announce</ion-button>
           </ion-item>
           <ion-item>
@@ -129,13 +111,6 @@
           </ion-item>
 
           {% endif %}
-
-          <ion-item lines='none'>
-            <ion-button expand="block" fill="clear" href="{{ url_for('get_details') }}">User Details</ion-button>
-          </ion-item>
-
-          <ion-button expand="block" fill="outline" color="danger" href="{{ url_for('logout') }}">Logout</ion-button>
-
         </ion-list>
       </ion-content>
     </ion-menu>
@@ -146,10 +121,12 @@
           <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
           </ion-buttons>
-          <ion-button fill="clear" href="{{url_for('home')}}"><ion-title>School2</ion-title></ion-button>
-          <ion-button fill="clear" slot="end">
+          <ion-button fill="clear" href="{{url_for('home')}}">
+            <ion-title>School2</ion-title>
+          </ion-button>
+          <ion-button fill="clear" slot="end" id="profile">
             <ion-icon name="person-circle-outline"></ion-icon>
-        </ion-button>
+          </ion-button>
         </ion-toolbar>
       </ion-header>
       {% block body %}
@@ -180,6 +157,49 @@
       toggle.checked = shouldCheck;
     }
   </script>
+    <script>
+      let currentPopover = null;
+  
+      const buttons = document.querySelector('#profile');
+      buttons.addEventListener('click', handleButtonClick);
+  
+      async function handleButtonClick(ev) {
+        popover = await popoverController.create({
+          component: 'popover-example-page',
+          event: ev,
+          translucent: true
+        });
+        currentPopover = popover;
+        return popover.present();
+      }
+  
+      function dismissPopover() {
+        if (currentPopover) {
+          currentPopover.dismiss().then(() => { currentPopover = null; });
+        }
+      }
+  
+      customElements.define('popover-example-page', class ModalContent extends HTMLElement {
+        connectedCallback() {
+          this.innerHTML = `
+            <ion-list>
+              <ion-item>
+            <ion-avatar slot="start">
+              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+            </ion-avatar>
+            <ion-button fill="clear" onclick="window.location.href='{{ url_for('get_details') }}';">
+              {{session['user']['name']}}</ion-label>
+          </ion-item>
+              <ion-item lines='none'>
+            <ion-button expand="block" fill="clear" href="{{ url_for('get_details') }}">User Details</ion-button>
+          </ion-item>
+
+          <ion-button expand="block" fill="clear" color="danger" href="{{ url_for('logout') }}">Logout</ion-button>
+            </ion-list>
+          `;
+        }
+      });
+    </script>
 </body>
 
 </html>

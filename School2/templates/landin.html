@@ -23,14 +23,14 @@
           </ion-title>
           <ion-item-group>
             <ion-item-divider>
-              <ion-label>Urgent</ion-label>
+              <ion-label color='danger'>Urgent</ion-label>
             </ion-item-divider>
             {% for key in ann %}
             {% if key['Priority']=='Urgent' and key['class_id']=='all' %}
             <ion-item lines="none">
               <ion-label>
-              <h1>{{ key['title'] }}</h1>
-              <h5>{{ key['content'] }}</h5>
+                <h1>{{ key['title'] }}</h1>
+                <h5>{{ key['content'] }}</h5>
               </ion-label>
             </ion-item>
             {% endif %}
@@ -44,8 +44,8 @@
             {% if key['Priority']!='Urgent' and key['class_id']=='all'%}
             <ion-item lines="none">
               <ion-label>
-              <h1>{{ key['title'] }}</h1>
-              <h5>{{ key['content'] }}</h5>
+                <h1>{{ key['title'] }}</h1>
+                <h5>{{ key['content'] }}</h5>
               </ion-label>
             </ion-item>
             {% endif %}
@@ -62,23 +62,54 @@
       {% endif %}
       {% if session['user']['role']=='student' %}
       <ion-col>
+        {% if cls_msg|length > 0 %}
         <ion-card>
           <ion-title class="list-group-item active">
             <h1>Class Messages</h1>
           </ion-title>
-          {% for key in cls_msg %}
-          <ion-item>
-            <ion-label>
-              <h1>{{ key['course_name'] }}</h1>
-              <h5>{{ key['content'] }}</h5>
-              <h5>Priority: {{ key['priority'] }}</h5>
-            </ion-label>
-          </ion-item>
-          {% endfor %}
+          <ion-item-group>
+            <ion-item-divider>
+              <ion-label color='danger'>Urgent</ion-label>
+            </ion-item-divider>
+            {% for key in cls_msg %}
+            {% if key['Priority']=='Urgent'%}
+            <ion-item lines="none">
+              <ion-label>
+                <h1>{{ key['title'] }}</h1>
+                <h5>{{ key['content'] }}</h5>
+                <h5>{{ session['user']['class'] }}</h5>
+              </ion-label>
+            </ion-item>
+            {% endif %}
+            {% endfor %}
+          </ion-item-group>
+          <ion-item-group>
+            <ion-item-divider>
+              <ion-label>Normal</ion-label>
+            </ion-item-divider>
+            {% for key in cls_msg %}
+            {% if key['Priority']!='Urgent'%}
+            <ion-item lines="none">
+              <ion-label>
+                <h1>{{ key['title'] }}</h1>
+                <h5>{{ key['content'] }}</h5>
+              </ion-label>
+            </ion-item>
+            {% endif %}
+            {% endfor %}
+          </ion-item-group>
         </ion-card>
+        {% endif %}
       </ion-col>
-    {% endif %}
-      <ion-col></ion-col>
+      {% if session['user']['username']=='admin' %}
+      <ioncol>
+        <ion-card>
+          <h1>Active users: {{active_users}}</h1>
+        </ion-card>
+        {% endif %}
+        </ion-col>
+        {% endif %}
+        <ion-col></ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>

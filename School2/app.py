@@ -107,16 +107,17 @@ class User:
             )
         flash("User not Found, Contact School Admin")
         return redirect("/")
-    
-    def postresults(self ,exam ,marks):
-        result={
+
+    def postresults(self, exam, marks):
+        result = {
             "_id": uuid.uuid4().hex,
-            "user": session['user']['name'],
-            "class":"cls_10",
-            "exam":exam,
-            "marks": marks
+            "user": session["user"]["name"],
+            "class": "cls_10",
+            "exam": exam,
+            "marks": marks,
         }
         db.results.insert_one(result)
+
 
 app = Flask(__name__)
 
@@ -154,7 +155,12 @@ def landin():
         )
     return render_template("landin.html", role=session["user"]["role"], ann=announce)
 
+
 ##### User Auth and Adding users
+
+@app.route("/attend")
+def attend():
+    return render_template("attendance.html")
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -181,31 +187,32 @@ def result():
     else:
         return redirect("/#")
 
+
 ##### Posting results
 
 @app.route("/results")
 def results():
-    if session['user']['role']=='staff':
-        stud=list(db['cls_10'].find({}))
-        courses=list(db.courses.find({'faculty_id':session['user']['_id']}))
-        return render_template('results.html', stud=stud, courses=courses)
-    elif session['user']['role']=='student':
-        marks=db.results.find({
-            'class': session['user']['class']
-        })
-        return render_template('results.html', marks=marks)
+    if session["user"]["role"] == "staff":
+        stud = list(db["cls_10"].find({}))
+        courses = list(db.courses.find({"faculty_id": session["user"]["_id"]}))
+        return render_template("results.html", stud=stud, courses=courses)
+    elif session["user"]["role"] == "student":
+        marks = db.results.find({"class": session["user"]["class"]})
+        return render_template("results.html", marks=marks)
 
 
 @app.route("/postresults", methods=["POST", "GET"])
 def postres():
     res = request.form
-    marks={}
+    marks = {}
     for i in list(res):
-        marks[i]=res.get(i)
-    User().postresults(res.get('exam'),marks)
+        marks[i] = res.get(i)
+    User().postresults(res.get("exam"), marks)
     return redirect("/")
 
+
 ##### Posting class messages and announcements
+
 
 @app.route("/updates", methods=["POST", "GET"])
 def updates():
@@ -220,6 +227,7 @@ def announce():
     User().announce(ann, session["user"]["_id"])
     return redirect("/")
 
+
 @app.route("/classmsg", methods=["GET", "POST"])
 def classmsg():
     courses = db.courses.find({"faculty_id": "{}".format(session["user"]["_id"])})
@@ -232,17 +240,23 @@ def classmsg():
 @app.route("/postclsmsg", methods=["GET", "POST"])
 def postclsmsg():
     message = request.form
-    print(message)
+    course_name=list(db.courses.find({"class":message.get("class"), "faculty_id":session['user']['_id']}))
+    print(course_name)
     new_message = {
         "_id": uuid.uuid4().hex,
-        "course_name": message.get("course_name"),
-        "content": message.get("content"),
+        
+        "message": message.get("content"),
+        "title":message.get('title'),
         "priority": message.get("priority"),
+        "class":message.get("class"),
+        "from":session['user']['name']
     }
-    db.class_messages.insert_one(new_message)
+    #db.class_messages.insert_one(new_message)
     return redirect("/")
 
+
 ##### Assign Courses
+
 
 @app.route("/courses")
 def add_courses():
@@ -260,7 +274,9 @@ def set_courses():
     User().courses(request.form)
     return redirect("/courses")
 
+
 ##### Search and view details
+
 
 @app.route("/user")
 def user():
@@ -290,31 +306,36 @@ def set_fee():
     User().stu_fee(request.form)
     return redirect("/")
 
+
 #### In Progress
+
 
 @app.route("/construct")
 def construct():
     return render_template("construct.html")
 
-@app.route('/setpass')
+
+@app.route("/setpass")
 def setpass():
     return render_template("setpass.html")
 
-@app.route('/updatepass')
-def updatepass():
-    return render_template('updatepass.html')
 
-@app.route('/resupdatepass', methods=['GET','POST'])
+@app.route("/updatepass")
+def updatepass():
+    return render_template("updatepass.html")
+
+
+@app.route("/resupdatepass", methods=["GET", "POST"])
 def resupdatepass():
-    passwd=request.form
-    new_passwd=passwd.get("password")
-    update={"password": sha256_crypt.hash(new_passwd)}
-    db.cred.update_one({{"username":session['user']['_id']}, {'$set':update}})
-    return redirect('/updatepass')
+    passwd = request.form
+    old_passwd = db.cred.find({"username": session["user"]["_id"]})
+    db.cred.update_one({{"username": session["user"]["_id"]}, {"$set": update}})
+    return redirect("/updatepass")
+
 
 if __name__ == "__main__":
     app.secret_key = "kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"
     port = int(os.environ.get("PORT", 5000))
-    debug = False
+    debug = True
     host = "127.0.0.1" if debug else "0.0.0.0"
     app.run(host=host, port=port, debug=debug)
