@@ -38,7 +38,7 @@
           </ion-item-group>
           <ion-item-group>
             <ion-item-divider>
-              <ion-label>Normal</ion-label>
+              <ion-label color='primary'>Normal</ion-label>
             </ion-item-divider>
             {% for key in ann %}
             {% if key['Priority']!='Urgent' and key['class_id']=='all'%}
@@ -53,17 +53,62 @@
           </ion-item-group>
         </ion-card>
       </ion-col>
-      {% if session['user']['username']=='admin' %}
+
+
+      {% if session['user']['role']=='admin' %}
       <ioncol>
         <ion-card>
-          <h1>Active users: {{active_users}}</h1>
+          <canvas id="active" style="height:500px; width:300px " width="200" height="400"></canvas>
+          <script>
+            let active = document.getElementById('active').getContext('2d');
+            var chart = new Chart(active, {
+              type: 'doughnut',
+              data: {
+                datasets: [{
+                  data: [
+                    10, 20, 30
+                  ],
+                  label: 'Dataset 1',
+                  backgroundColor: ["red", "blue", "green"],
+                }],
+                labels: [
+                  'Admin',
+                  'Faculty',
+                  'Students',
+                ]
+              },
+              options: {
+                responsive: true,
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: true,
+                  text: 'Active Users'
+                },
+                animation: {
+                  animateScale: true,
+                  animateRotate: true
+                }
+              }
+            });
+          </script>
+          <ion-list>
+            {% for i in active_users %}
+            <ion-item>
+              <h5>{{i['name']}}</h5>
+            </ion-item>
+            {% endfor %}
+          </ion-list>
         </ion-card>
       </ioncol>
       {% endif %}
+
+
       {% if session['user']['role']=='student' %}
       <ion-col>
         {% if cls_msg|length > 0 %}
-        <ion-card>
+        <ion-card --background: secondary>
           <ion-title class="list-group-item active">
             <h1>Class Messages</h1>
           </ion-title>
@@ -72,13 +117,13 @@
               <ion-label color='danger'>Urgent</ion-label>
             </ion-item-divider>
             {% for key in cls_msg %}
-            {% if key['priority']=='Urgent' %}
+            {% if key['priority']=='Urgent' and key['class']==session['user']['class'] %}
             <ion-item>
               <ion-label>
                 <h1>{{ key['title'] }}</h1>
                 <h5>{{ key['message'] }}</h5>
                 <h5><b>From:</b> {{ key['from'] }}</h5>
-                <h5><b>Course:</b> {{key['course_name']}} ({{key['course_id']}})  </h5>
+                <h5><b>Course:</b> {{key['course_name']}} ({{key['course_id']}}) </h5>
               </ion-label>
             </ion-item>
             {% endif %}
@@ -86,14 +131,15 @@
           </ion-item-group>
           <ion-item-group>
             <ion-item-divider>
-              <ion-label>Normal</ion-label>
+              <ion-label color='primary'>Normal</ion-label>
             </ion-item-divider>
             {% for key in cls_msg %}
-            {% if key['priority']!='Urgent'%}
+            {% if key['priority']!='Urgent' and key['class']==session['user']['class']%}
             <ion-item lines="none">
-              <ion-label>
-                <h1>{{ key['title'] }}</h1>
-                <h5>{{ key['content'] }}</h5>
+              <h1>{{ key['title'] }}</h1>
+              <h5>{{ key['message'] }}</h5>
+              <h5><b>From:</b> {{ key['from'] }}</h5>
+              <h5><b>Course:</b> {{key['course_name']}} ({{key['course_id']}}) </h5>
               </ion-label>
             </ion-item>
             {% endif %}
@@ -105,14 +151,13 @@
 
       </ion-col>
       {% if session['user']['username']=='admin' %}
-      <ioncol>
+      <ion-col>
         <ion-card>
           <h1>Active users: {{active_users}}</h1>
         </ion-card>
         {% endif %}
-        </ion-col>
-        {% endif %}
-        <ion-col></ion-col>
+      </ion-col>
+      {% endif %}
     </ion-row>
   </ion-grid>
 </ion-content>

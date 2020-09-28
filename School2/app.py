@@ -13,7 +13,8 @@ import pymongo
 from datetime import datetime, timedelta
 from passlib.hash import sha256_crypt
 import os
-
+import requests
+import json
 client = pymongo.MongoClient(
     "mongodb+srv://g0utham:Sg106271@cluster0-v0h6w.gcp.mongodb.net/?retryWrites=true&w=majority"
 )
@@ -24,7 +25,7 @@ class User:
     def start_session(self, user):
         session["logged_in"] = True
         session["user"] = user
-        print("Session Started")
+        db.active.insert_one(user)
         return redirect("/#")
 
     def announce(self, announce, id):
@@ -40,6 +41,7 @@ class User:
             return redirect("/")
 
     def signout(self):
+        db.active.delete_one({"_id":session['user']['_id']})
         session.clear()
         flash("You have logged out successfully")
         return redirect("/")
@@ -101,7 +103,7 @@ class User:
 
     def login(self):
         cred = db.cred.find_one({"username": request.form.get("username").lower()})
-        if cred and sha256_crypt.verify(request.form.get("password"), cred["password"]):
+        if cred and sha256_crypt.verify(request.form.get("password"), cred["password"]) and is_human(request.form['g-recaptcha-response']):
             return self.start_session(
                 db.user_details.find_one({"_id": cred["username"]})
             )
@@ -118,6 +120,13 @@ class User:
         }
         db.results.insert_one(result)
 
+def is_human(captcha_response):
+    secret = "6LdMW9EZAAAAABzv_SguBzMlqgdOOkDPnJcKRbzb"
+    payload = {'response':captcha_response, 'secret':secret}
+    response = requests.post("https://www.google.com/recaptcha/api/siteverify", payload)
+    response_text = json.loads(response.text)
+    print(response_text)
+    return response_text['success']
 
 app = Flask(__name__)
 
@@ -132,7 +141,7 @@ def server_error(e):
 def before_request():
     session.permanent = True
     if debug == False:
-        app.permanent_session_lifetime = timedelta(minutes=5)
+        app.permanent_session_lifetime = timedelta(minutes=15)
 
 
 @app.route("/")
@@ -147,12 +156,14 @@ def home():
 @app.route("/#")
 def landin():
     announce = list(db.announcements.find({}))
-    print("page Landed")
     if session["user"]["role"] == "student":
         cls_mess = list(db.class_messages.find({}))
         return render_template(
             "landin.html", role=session["user"]["role"], ann=announce, cls_msg=cls_mess
         )
+    elif session['user']['role']=="admin":
+        active_users=list(db.active.find({}))
+        return render_template("landin.html", role=session["user"]["role"], ann=announce, active_users=active_users)
     return render_template("landin.html", role=session["user"]["role"], ann=announce)
 
 
