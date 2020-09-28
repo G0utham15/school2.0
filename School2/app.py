@@ -144,7 +144,7 @@ def before_request():
         app.permanent_session_lifetime = timedelta(minutes=15)
 
 
-@app.route("/")
+@app.route("/",methods=['GET','POST'])
 def home():
     try:
         if session["logged_in"]:

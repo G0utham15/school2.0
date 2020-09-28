@@ -2,17 +2,6 @@
 
 {% block head %}
 <title>Login</title>
-<script>
-  function onSubmit(token) {
-    var element = document.getElementById('submit');
-    element.onclick = validate;
-  }
-
-  function validate(event) {
-    event.preventDefault();
-    grecaptcha.execute();
-  }
-</script>
 <script src="https://www.google.com/recaptcha/api.js"></script>
 {% endblock %}
 
