@@ -13,7 +13,7 @@
     grecaptcha.execute();
   }
 </script>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="https://www.google.com/recaptcha/api.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -38,10 +38,7 @@
                 <ion-input type="password" name="password" id="inpPass" required=true></ion-input>
               </ion-item>
             </ion-list>
-            <div id='recaptcha' class="g-recaptcha"
-          data-sitekey="6LdMW9EZAAAAABNTDJZnqKLunWo3G_j1t7hr8Zal"
-          data-callback="onSubmit"
-          data-size="invisible"></div>
+            <div class="g-recaptcha" data-sitekey="6LdMW9EZAAAAABNTDJZnqKLunWo3G_j1t7hr8Zal"></div>
             <section>
               <ion-button type="submit" id="login" expand="block" fill="clear">
                 Submit</ion-button>
@@ -62,7 +59,7 @@
         {% with messages=get_flashed_messages() %}
         {% if messages %}
         {% for i in messages %}
-        <ion-alert>{{i}}</ion-alert>
+        <ion-text>{{i}}</ion-text>
         {% endfor %}
         {% endif %}
         {% endwith %}
