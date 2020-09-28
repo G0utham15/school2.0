@@ -348,6 +348,6 @@ def resupdatepass():
 if __name__ == "__main__":
     app.secret_key = "kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"
     port = int(os.environ.get("PORT", 5000))
-    debug = True
+    debug = False
     host = "127.0.0.1" if debug else "0.0.0.0"
     app.run(host=host, port=port, debug=debug)
