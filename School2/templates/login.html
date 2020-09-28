@@ -2,12 +2,18 @@
 
 {% block head %}
 <title>Login</title>
-<script src="https://www.google.com/recaptcha/api.js"></script>
 <script>
   function onSubmit(token) {
-         document.getElementById("login_form").submit();
-       }
+    var element = document.getElementById('submit');
+    element.onclick = validate;
+  }
+
+  function validate(event) {
+    event.preventDefault();
+    grecaptcha.execute();
+  }
 </script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 {% endblock %}
 
 {% block body %}
@@ -32,12 +38,15 @@
                 <ion-input type="password" name="password" id="inpPass" required=true></ion-input>
               </ion-item>
             </ion-list>
+            <div id='recaptcha' class="g-recaptcha"
+          data-sitekey="6LdMW9EZAAAAABNTDJZnqKLunWo3G_j1t7hr8Zal"
+          data-callback="onSubmit"
+          data-size="invisible"></div>
             <section>
-              <ion-button class="g-recaptcha" data-sitekey="6LdMW9EZAAAAABNTDJZnqKLunWo3G_j1t7hr8Zal" data-callback='onSubmit' type="submit" id="login" expand="block" fill="clear">
+              <ion-button type="submit" id="login" expand="block" fill="clear">
                 Submit</ion-button>
             </section>
           </form>
-          <script>onload();</script>
           <ion-alert-controller></ion-alert-controller>
         </ion-card>
       </ion-col>
