@@ -240,18 +240,19 @@ def classmsg():
 @app.route("/postclsmsg", methods=["GET", "POST"])
 def postclsmsg():
     message = request.form
-    course_name=list(db.courses.find({"class":message.get("class"), "faculty_id":session['user']['_id']}))
-    print(course_name)
+    course_name=list(db.courses.find({"class":message.get("class"), "faculty_id":session['user']['_id']}))[0]['course_name']
+    course_id=list(db.courses.find({"class":message.get("class"), "faculty_id":session['user']['_id']}))[0]['course_id']
     new_message = {
         "_id": uuid.uuid4().hex,
-        
+        "course_id":course_id,
+        "course_name":course_name,
         "message": message.get("content"),
         "title":message.get('title'),
         "priority": message.get("priority"),
         "class":message.get("class"),
         "from":session['user']['name']
     }
-    #db.class_messages.insert_one(new_message)
+    db.class_messages.insert_one(new_message)
     return redirect("/")
 
 
@@ -336,6 +337,6 @@ def resupdatepass():
 if __name__ == "__main__":
     app.secret_key = "kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"
     port = int(os.environ.get("PORT", 5000))
-    debug = True
+    debug = False
     host = "127.0.0.1" if debug else "0.0.0.0"
     app.run(host=host, port=port, debug=debug)

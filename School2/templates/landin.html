@@ -72,12 +72,13 @@
               <ion-label color='danger'>Urgent</ion-label>
             </ion-item-divider>
             {% for key in cls_msg %}
-            {% if key['Priority']=='Urgent'%}
-            <ion-item lines="none">
+            {% if key['priority']=='Urgent' %}
+            <ion-item>
               <ion-label>
                 <h1>{{ key['title'] }}</h1>
-                <h5>{{ key['content'] }}</h5>
-                <h5>{{ session['user']['class'] }}</h5>
+                <h5>{{ key['message'] }}</h5>
+                <h5><b>From:</b> {{ key['from'] }}</h5>
+                <h5><b>Course:</b> {{key['course_name']}} ({{key['course_id']}})  </h5>
               </ion-label>
             </ion-item>
             {% endif %}
@@ -88,7 +89,7 @@
               <ion-label>Normal</ion-label>
             </ion-item-divider>
             {% for key in cls_msg %}
-            {% if key['Priority']!='Urgent'%}
+            {% if key['priority']!='Urgent'%}
             <ion-item lines="none">
               <ion-label>
                 <h1>{{ key['title'] }}</h1>
@@ -98,8 +99,10 @@
             {% endif %}
             {% endfor %}
           </ion-item-group>
+
         </ion-card>
         {% endif %}
+
       </ion-col>
       {% if session['user']['username']=='admin' %}
       <ioncol>
