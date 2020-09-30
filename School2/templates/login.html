@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Login</title>
+<script src="https://www.google.com/recaptcha/api.js"></script>
+{% endblock %}
+
+{% block body %}
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col>
+        <ion-card>
+          <ion-title>
+            <h1>Login</h1>
+          </ion-title>
+          
+          <form action="{{ url_for('login') }}" method="POST" name="login_form">
+            <ion-list>
+              <ion-item lines="none">
+                <ion-label position="floating">Username</ion-label>
+                <ion-input type="text" name="username" id="inpID" required=true></ion-input>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label position="floating">Password</ion-label>
+                <ion-input type="password" name="password" id="inpPass" required=true></ion-input>
+              </ion-item>
+            </ion-list>
+            <div class="g-recaptcha" data-sitekey="6LdMW9EZAAAAABNTDJZnqKLunWo3G_j1t7hr8Zal"></div>
+            <section>
+              <ion-button type="submit" id="login" expand="block" fill="clear">
+                Submit</ion-button>
+            </section>
+          </form>
+          <ion-alert-controller></ion-alert-controller>
+        </ion-card>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col>
+        {% if err %}
+
+        <p>{{err}}</p>
+        {% endif %}
+        {% with messages=get_flashed_messages() %}
+        {% if messages %}
+        {% for i in messages %}
+        <ion-text>{{i}}</ion-text>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<script>
+  var input = document.getElementById("inpID");
+  var inpPass = document.getElementById("inpPass");
+  // Execute a function when the user releases a key on the keyboard
+  input.addEventListener("keyup", function (event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+      // Cancel the default action, if needed
+      event.preventDefault();
+      // Trigger the button element with a click
+      document.getElementById("login").click();
+    }
+  });
+  inpPass.addEventListener("keyup", function (event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+      // Cancel the default action, if needed
+      event.preventDefault();
+      // Trigger the button element with a click
+      document.getElementById("login").click();
+    }
+  });
+</script>
+{% endblock %}

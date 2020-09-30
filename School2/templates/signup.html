@@ -1,0 +1,102 @@
+{% extends "base-login.html" %}
+{% block head %}
+<title>Signup</title>
+{% endblock %}
+{% block body %}
+<ion-content>
+    <ion-grid>
+
+        <ion-row>
+            <ion-col></ion-col>
+            <ion-col>
+                <ion-card>
+                    <ion-title class="list-group-item active">
+                        <h1>Create an Account</h1>
+                    </ion-title>
+
+                    <form action="{{ url_for('result') }}" method="POST" name="signup_form">
+                        <ion-list>
+
+                            <ion-item lines="none">
+                                <ion-label for="role">Permission level</ion-label>
+                                <ion-select name="role" id="role">
+                                    <ion-select-option value="student">Student</ion-select-option>>
+                                    <ion-select-option value="parent">Parent</ion-select-option>>
+                                    <ion-select-option value="staff">Staff</ion-select-option>
+                                    <ion-select-option value="admin">Admin</ion-select-option>
+                                    </select>
+                            </ion-item>
+
+                            <ion-item>
+                                <ion-label position="floating">Full Name</label>
+                                    <ion-input type="text" name="name" class="field" required>
+                            </ion-item>
+
+                            <ion-item>
+                                <ion-label for="username" position="floating">Username/Email</label>
+                                    <ion-input type="text" name="username" class="field" required>
+                            </ion-item>
+
+                            <ion-item lines="none">
+                                <ion-label>Date of Birth</ion-label>
+                                <ion-datetime value="1990-02-19" placeholder="Select Date" name="dob"></ion-datetime>
+                            </ion-item>
+
+                            <ion-item lines="none">
+                                <ion-label>Gender</ion-label>
+                                <ion-select name="gender">
+                                    <ion-select-option value="male">Male</ion-select-option>
+                                    <ion-select-option value="female">Female</ion-select-option>
+                                    <ion-select-option value="others">Others</ion-select-option>
+                                </ion-select>
+                            </ion-item>
+
+                            <ion-item lines="none">
+                                <ion-label>Year</ion-label>
+                                <ion-datetime name="year" placeholder="2021" display-format="YYYY" min="1990"
+                                    max="2021"></ion-datetime>
+                            </ion-item>
+
+                            <ion-item lines="none">
+                                <ion-label position="floating">Mobile</ion-label>
+                                <ion-input type="text" name="mobile" class="field" required>
+                            </ion-item>
+
+                            <ion-item lines="none">
+                                <ion-label position="floating">Email ID</ion-label>
+                                <ion-input type="email" name="email" class="field" required>
+                            </ion-item>
+
+                            <ion-item lines="none">
+                                <ion-label>Class</ion-label>
+                                <ion-select name="class">
+                                    <ion-select-option value="cls_1">1</ion-select-option>
+                                    <ion-select-option value="cls_2">2</ion-select-option>
+                                    <ion-select-option value="cls_3">3</ion-select-option>
+                                    <ion-select-option value="cls_4">4</ion-select-option>
+                                    <ion-select-option value="cls_5">5</ion-select-option>
+                                    <ion-select-option value="cls_6">6</ion-select-option>
+                                    <ion-select-option value="cls_7">7</ion-select-option>
+                                    <ion-select-option value="cls_8">8</ion-select-option>
+                                    <ion-select-option value="cls_9">9</ion-select-option>
+                                    <ion-select-option value="cls_10">10</ion-select-option>
+                                </ion-select>
+                            </ion-item>
+
+                            <ion-item lines="none">
+                                <ion-label position="floating">Password</label>
+                                    <ion-input type="password" name="password" class="field" required>
+                            </ion-item>
+                        </ion-list>
+                        <ion-button type="submit" fill="clear" expand="block">Add User</ion-button>
+
+                    </form>
+                </ion-card>
+            </ion-col>
+            <ion-col></ion-col>
+        </ion-row>
+
+    </ion-grid>
+
+</ion-content>
+{% endblock %}

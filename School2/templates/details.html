@@ -1,0 +1,79 @@
+{% extends "base-login.html" %}
+{% block head %}
+<title>Details</title>
+{% endblock %}
+
+{% block body %}
+
+<ion-content>
+
+    <ion-list>
+        <ion-list-header>
+            <h1>Details</h1>
+        </ion-list-header>
+        <ion-item lines="none">
+            <ion-col>
+                <ion-text>
+                    <h5>Username</h5>
+                </ion-text>
+            </ion-col>
+            <ion-col>
+                <ion-text>
+                    <h5>{{session['user']['_id']}}</h5>
+                </ion-text>
+            </ion-col>
+        </ion-item>
+        <ion-item lines="none">
+            <ion-col>
+                <ion-text>
+                    <h5>Name</h5>
+                </ion-text>
+            </ion-col>
+            <ion-col>
+                <ion-text>
+                    <h5>{{session['user']['name']}}</h5>
+                </ion-text>
+            </ion-col>
+        </ion-item>
+        {% if role=="student" %}
+        <ion-item lines="none">
+            <ion-col>
+                <ion-text>
+                    <h5>Class</h5>
+                </ion-text>
+            </ion-col>
+            <ion-col>
+                <ion-text>
+                    <h5>{{session['user']['class']}}</h5>
+                </ion-text>
+            </ion-col>
+        </ion-item>
+        {% endif %}
+        <ion-item lines="none">
+            <ion-col>
+                <ion-text>
+                    <h5>Email ID</h5>
+                </ion-text>
+            </ion-col>
+            <ion-col>
+                <ion-text>
+                    <h5>{{session['user']['email']}}</h5>
+                </ion-text>
+            </ion-col>
+        </ion-item>
+        <ion-item lines="none">
+            <ion-col>
+                <ion-text>
+                    <h5>Mobile</h5>
+                </ion-text>
+            </ion-col>
+            <ion-col>
+                <ion-text>
+                    <h5>{{session['user']['mobile']}}</h5>
+                </ion-text>
+            </ion-col>
+        </ion-item>
+    </ion-list>
+    <ion-button href="{{url_for('home')}}">Back</ion-button>
+</ion-content>
+{% endblock %}
