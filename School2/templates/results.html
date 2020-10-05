@@ -11,52 +11,23 @@
             <h1>Results</h1>
         </ion-title>
         {% if session['user']['role']=='staff' %}
-        <form action="{{ url_for('postres') }}" method="POST" name="signup_form">
+        <form action="{{ url_for('marks') }}" method="POST" name="signup_form">
             <ion-item lines="none">
-                <ion-label>Exam Title</ion-label>
-                <ion-select name="exam">
-                    <ion-select-option value="cat1">CAT-1</ion-select-option>
-                    <ion-select-option value="cat2">Cat-2</ion-select-option>
-                    <ion-select-option value="fat">FAT</ion-select-option>
+                <ion-label>class</ion-label>
+                <ion-select mode="ios" name="class">
+                    {% for i in courses %}
+                    <ion-select-option value="{{i['class']}}">{{i['class']}}</ion-select-option>
+                    {% endfor %}
                 </ion-select>
+                <ion-button type="submit" fill="clear" expand="block"><ion-icon name="arrow-forward-outline"></ion-icon></ion-button>
             </ion-item>
-            <ion-list>
-                <ion-item><ion-input name="maxMarks"></ion-input></ion-item>
-                <ion-item>
-                    <ion-col>
-                        <h5>User ID</h5>
-                    </ion-col>
-                    <ion-col>
-                        <h5>Name</h5>
-                    </ion-col>
-                    <ion-col>
-                        <h5>Marks</h5>
-                    </ion-col>
-                </ion-item>
-                {% for i in stud %}
-                <ion-item>
-                    <ion-col>
-                        <h5>{{ i['_id'] }}</h5>
-                    </ion-col>
-                    <ion-col>
-                        <h5>{{ i['name'] }}</h5>
-                    </ion-col>
-                    <ion-col>
-                        <ion-input type="text" name="{{ i['_id'] }}" class="field" required=true></ion-input>
-                    </ion-col>
-
-                </ion-item>
-            </ion-list>
-                {% endfor %}
-                <ion-button type="submit" fill="clear" expand="block">Post results</ion-button>
-
+                
         </form>
         {% elif session['user']['role']=='student' %}
             <ion-list>
             {% for i in marks %}
             
-                <h5>{{i['exam']}}</h5>
-                <h5>{{i['marks'][session['user']['_id']]}}</h5>
+                <h5>{{i}}</h5>
             
             
             {% endfor %}

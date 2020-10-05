@@ -116,16 +116,6 @@ class User:
         flash("User not Found, Contact School Admin")
         return redirect("/")
 
-    def postresults(self, exam, marks):
-        result = {
-            "_id": uuid.uuid4().hex,
-            "user": session["user"]["name"],
-            "class": "cls_10",
-            "exam": exam,
-            "marks": marks,
-        }
-        db.results.insert_one(result)
-
 def is_human(captcha_response):
     secret = "6LdMW9EZAAAAABzv_SguBzMlqgdOOkDPnJcKRbzb" 
     payload = {'response':captcha_response, 'secret':secret}
@@ -208,26 +198,45 @@ def result():
 
 
 ##### Posting results
-
 @app.route("/results")
 def results():
     if session["user"]["role"] == "staff":
-        stud = list(db["cls_10"].find({}))
         courses = list(db.courses.find({"faculty_id": session["user"]["_id"]}))
-        return render_template("results.html", stud=stud, courses=courses)
-    elif session["user"]["role"] == "student":
+        return render_template("results.html",courses=courses)
+    elif session['user']['role']=="student":
         marks = db.results.find({"class": session["user"]["class"]})
         return render_template("results.html", marks=marks)
 
+@app.route("/marks", methods=['GET', 'POST'])
+def marks():
+    class_sel=request.form
+    stud = list(db[class_sel['class']].find({}))
+    return render_template("post_results.html", stud=stud, class_sel=class_sel['class'])
 
 @app.route("/postresults", methods=["POST", "GET"])
 def postres():
+    import numpy as np
     res = request.form
-    marks = {}
-    for i in list(res):
-        marks[i] = res.get(i)
-    User().postresults(res.get("exam"), marks)
-    return redirect("/")
+    course_name=list(db.courses.find({"class":res.get("class"), "faculty_id":session['user']['_id']}))[0]['course_name']
+    course_id=list(db.courses.find({"class":res.get("class"), "faculty_id":session['user']['_id']}))[0]['course_id']
+    students=list(res.keys())[3:]
+    avg=np.average([int(res.get(i)) for i in students])
+    stDev=np.std([int(res.get(i)) for i in students])
+    mark={i: res.get(i) for i in students}
+    marks = {
+        "_id": uuid.uuid4().hex,
+        "course_id":course_id,
+        "course_name":course_name,
+        "user": session["user"]["name"],
+        "class": res.get('class'),
+        "exam": res.get('exam'),
+        "maxMarks": res.get('maxMarks'),
+        "marks":mark,
+        "mean":avg,
+        "std":round(stDev, 2),
+    }
+    db.results.insert_one(marks)
+    return redirect("/results")
 
 
 ##### Posting class messages and announcements
@@ -357,6 +366,6 @@ if __name__ == "__main__":
     app.secret_key = "kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"
     port = int(os.environ.get("PORT", 5000))
     captcha_keys=["6LdMW9EZAAAAABNTDJZnqKLunWo3G_j1t7hr8Zal"]
-    debug = True
+    debug = False
     host = "127.0.0.1" if debug else "0.0.0.0"
     app.run(host=host, port=port, debug=debug)

@@ -1,0 +1,64 @@
+{% extends "base-login.html" %}
+
+{% block head %}
+<title>Welcome {{role}}</title>
+{% endblock %}
+{% block body %}
+<ion-content>
+
+    <ion-card>
+        <ion-title class="list-group-item active">
+            <h1>Results</h1>
+        </ion-title>
+        {% if session['user']['role']=='staff' %}
+        <form action="{{ url_for('postres') }}" method="POST" name="signup_form">
+            <ion-item lines="none">
+                <ion-col><ion-label>class</ion-label></ion-col>
+                <ion-col><ion-input name="class" value={{class_sel}}></ion-input></ion-col>
+            </ion-item>
+            <ion-item lines="none">
+                <ion-label>Exam Title</ion-label>
+                <ion-select mode="ios" name="exam">
+                    <ion-select-option value="cat1">CAT-1</ion-select-option>
+                    <ion-select-option value="cat2">Cat-2</ion-select-option>
+                    <ion-select-option value="fat">FAT</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <ion-list>
+                <ion-item lines='none'>
+                    <ion-col><ion-label>Max. Marks</ion-label></ion-col>
+                    <ion-col><ion-input placeholder="Max. Marks" required='true' type="number" name="maxMarks"></ion-input></ion-col>
+                </ion-item>
+                <ion-item>
+                    <ion-col>
+                        <h5>User ID</h5>
+                    </ion-col>
+                    <ion-col>
+                        <h5>Name</h5>
+                    </ion-col>
+                    <ion-col>
+                        <h5>Marks</h5>
+                    </ion-col>
+                </ion-item>
+                {% for i in stud %}
+                <ion-item>
+                    <ion-col>
+                        <h5>{{ i['_id'] }}</h5>
+                    </ion-col>
+                    <ion-col>
+                        <h5>{{ i['name'] }}</h5>
+                    </ion-col>
+                    <ion-col>
+                        <ion-input name="{{ i['_id'] }}" type="number" value=0 clearInput='true' class="field" required=true></ion-input>
+                    </ion-col>
+
+                </ion-item>
+            </ion-list>
+                {% endfor %}
+                <ion-button type="submit" fill="clear" expand="block">Post results</ion-button>
+            {%endif%}
+        </form>
+    </ion-card>
+
+</ion-content>
+{% endblock %}
