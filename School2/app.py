@@ -103,10 +103,16 @@ class User:
 
     def login(self):
         cred = db.cred.find_one({"username": request.form.get("username").lower()})
-        if cred and sha256_crypt.verify(request.form.get("password"), cred["password"]) and is_human(request.form['g-recaptcha-response']):
-            return self.start_session(
-                db.user_details.find_one({"_id": cred["username"]})
-            )
+        if is_human(request.form['g-recaptcha-response']) and debug==False:
+            if cred and sha256_crypt.verify(request.form.get("password"), cred["password"]):
+                return self.start_session(
+                    db.user_details.find_one({"_id": cred["username"]})
+                )
+        elif debug==True:
+            if cred and sha256_crypt.verify(request.form.get("password"), cred["password"]):
+                return self.start_session(
+                    db.user_details.find_one({"_id": cred["username"]})
+                )
         flash("User not Found, Contact School Admin")
         return redirect("/")
 
@@ -150,7 +156,7 @@ def home():
         if session["logged_in"]:
             return redirect(url_for("landin"))
     except:
-        return render_template("login.html")
+        return render_template("login.html", keys=captcha_keys[0])
 
 
 @app.route("/#")
@@ -163,7 +169,9 @@ def landin():
         )
     elif session['user']['role']=="admin":
         active_users=list(db.active.find({}))
-        return render_template("landin.html", role=session["user"]["role"], ann=announce, active_users=active_users)
+        user_count=[len([i for i in active_users if i['role']=='admin']), len([i for i in active_users if i['role']=='staff'])\
+            , len([i for i in active_users if i['role']=='student'])]
+        return render_template("landin.html", role=session["user"]["role"], ann=announce, active_users=active_users, user_count=user_count)
     return render_template("landin.html", role=session["user"]["role"], ann=announce)
 
 
@@ -348,6 +356,7 @@ def resupdatepass():
 if __name__ == "__main__":
     app.secret_key = "kqwflslciunWEUYSDFCNCwelsgfkhwwvfli535sjsdivbloh"
     port = int(os.environ.get("PORT", 5000))
-    debug = False
+    captcha_keys=["6LdMW9EZAAAAABNTDJZnqKLunWo3G_j1t7hr8Zal"]
+    debug = True
     host = "127.0.0.1" if debug else "0.0.0.0"
     app.run(host=host, port=port, debug=debug)
