@@ -65,9 +65,7 @@
               type: 'doughnut',
               data: {
                 datasets: [{
-                  data: [
-                    10, 20, 30
-                  ],
+                  data: {{ user_count }},
                   label: 'Dataset 1',
                   backgroundColor: ["red", "blue", "green"],
                 }],
@@ -94,10 +92,42 @@
             });
           </script>
           <ion-list>
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <h5>Name</h5>
+                </ion-item>
+              </ion-col>
+              <ion-col>
+                <ion-item>
+                  <h5>UserID</h5>
+                </ion-item>
+              </ion-col>
+              <ion-col>
+                <ion-item>
+                  <h5>Role</h5>
+                </ion-item>
+              </ion-col>
+            </ion-row>
             {% for i in active_users %}
-            <ion-item>
-              <h5>{{i['name']}}</h5>
-            </ion-item>
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <h5>{{i['name']}}</h5>
+                </ion-item>
+              </ion-col>
+              <ion-col>
+                <ion-item>
+                  <h5>{{i['_id']}}</h5>
+                </ion-item>
+              </ion-col>
+              <ion-col>
+                <ion-item>
+                  <h5>{{i['role']}}</h5>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
             {% endfor %}
           </ion-list>
         </ion-card>
@@ -145,17 +175,9 @@
             {% endif %}
             {% endfor %}
           </ion-item-group>
-
         </ion-card>
         {% endif %}
-
       </ion-col>
-      {% if session['user']['username']=='admin' %}
-      <ion-col>
-        <ion-card>
-          <h1>Active users: {{active_users}}</h1>
-        </ion-card>
-        {% endif %}
       </ion-col>
       {% endif %}
     </ion-row>
