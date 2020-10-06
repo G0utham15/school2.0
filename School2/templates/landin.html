@@ -58,7 +58,9 @@
       {% if session['user']['role']=='admin' %}
       <ioncol>
         <ion-card>
-          <canvas id="active" style="height:500px; width:300px " width="200" height="400"></canvas>
+          <div style="width: 100%;">
+            <canvas id="active" style="height:500px; width:300px " width="500" height="400"></canvas>
+          </div>
           <script>
             let active = document.getElementById('active').getContext('2d');
             var chart = new Chart(active, {
@@ -66,29 +68,29 @@
               data: {
                 datasets: [{
                   data: {{ user_count }},
-                  label: 'Dataset 1',
-                  backgroundColor: ["red", "blue", "green"],
-                }],
-                labels: [
-                  'Admin',
-                  'Faculty',
-                  'Students',
-                ]
+              label: 'Dataset 1',
+              backgroundColor: ["red", "blue", "green"],
+            }],
+              labels: [
+              'Admin',
+              'Faculty',
+              'Students',
+            ]
               },
-              options: {
-                responsive: true,
+            options: {
+              responsive: true,
                 legend: {
-                  position: 'top',
+                position: 'top',
                 },
-                title: {
-                  display: true,
+              title: {
+                display: true,
                   text: 'Active Users'
-                },
-                animation: {
-                  animateScale: true,
+              },
+              animation: {
+                animateScale: true,
                   animateRotate: true
-                }
               }
+            }
             });
           </script>
           <ion-list>

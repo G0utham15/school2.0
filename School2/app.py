@@ -137,6 +137,7 @@ def server_error(e):
 def before_request():
     session.permanent = True
     if debug == False:
+        db.active.delete_one({"_id":session['user']['_id']})
         app.permanent_session_lifetime = timedelta(minutes=15)
 
 
@@ -205,7 +206,7 @@ def results():
         return render_template("results.html",courses=courses)
     elif session['user']['role']=="student":
         marks = db.results.find({"class": session["user"]["class"]})
-        return render_template("results.html", marks=marks)
+        return render_template("results.html", marks=list(marks))
 
 @app.route("/marks", methods=['GET', 'POST'])
 def marks():
@@ -222,7 +223,7 @@ def postres():
     students=list(res.keys())[3:]
     avg=np.average([int(res.get(i)) for i in students])
     stDev=np.std([int(res.get(i)) for i in students])
-    mark={i: res.get(i) for i in students}
+    mark={i: int(res.get(i)) for i in students}
     marks = {
         "_id": uuid.uuid4().hex,
         "course_id":course_id,
@@ -230,9 +231,9 @@ def postres():
         "user": session["user"]["name"],
         "class": res.get('class'),
         "exam": res.get('exam'),
-        "maxMarks": res.get('maxMarks'),
+        "maxMarks": int(res.get('maxMarks')),
         "marks":mark,
-        "mean":avg,
+        "mean":round(avg, 2),
         "std":round(stDev, 2),
     }
     db.results.insert_one(marks)

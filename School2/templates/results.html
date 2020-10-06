@@ -19,21 +19,69 @@
                     <ion-select-option value="{{i['class']}}">{{i['class']}}</ion-select-option>
                     {% endfor %}
                 </ion-select>
-                <ion-button type="submit" fill="clear" expand="block"><ion-icon name="arrow-forward-outline"></ion-icon></ion-button>
+                <ion-button type="submit" fill="clear" expand="block">
+                    <ion-icon name="arrow-forward-outline"></ion-icon>
+                </ion-button>
             </ion-item>
-                
+
         </form>
         {% elif session['user']['role']=='student' %}
-            <ion-list>
-            {% for i in marks %}
-            
-                <h5>{{i}}</h5>
-            
-            
+        {{marks}}
+        <ion-list>
+            <ion-list-header>
+                <h1>{{marks[0]['course_name'] }} - {{marks[0]['course_id']}}</h1>
+            </ion-list-header>
+        {% for i in marks %}
+        
+            <ion-item-group>
+
+                <ion-item-divider>
+                    <ion-label><h2>{{i['exam']}}</h2></ion-label>
+                </ion-item-divider>
+                <ion-item lines="none">
+                    <ion-label>
+                        <h5>Max. Marks : {{ i['maxMarks'] }}</h5>
+                        <h5>Scored Marks : {{ i['marks'][session['user']['_id']] }}</h5>
+                    </ion-label>
+                </ion-item>
+            </ion-item-group>
+            <h5>{{i}}</h5>
+            <canvas id="active" style="height:500px; width:300px " width="500" height="400"></canvas>
+          <script>
+
+		window.onload = function() {
+			var ctx = document.getElementById('canvas').getContext('2d');
+			window.myBar = new Chart(ctx, {
+				type: 'bar',
+				data: [
+					{{i['marks'][session['user']['_id']]}}
+				],
+				options: {
+					title: {
+						display: true,
+						text: 'Chart.js Bar Chart - Stacked'
+					},
+					tooltips: {
+						mode: 'index',
+						intersect: false
+					},
+					responsive: true,
+					scales: {
+						x: {
+							stacked: true,
+						},
+						y: {
+							stacked: true
+						}
+					}
+				}
+			});
+		};
+
+          </script>
             {% endfor %}
         </ion-list>
         {% endif %}
     </ion-card>
-
 </ion-content>
 {% endblock %}
