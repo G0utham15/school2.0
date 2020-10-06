@@ -137,7 +137,6 @@ def server_error(e):
 def before_request():
     session.permanent = True
     if debug == False:
-        db.active.delete_one({"_id":session['user']['_id']})
         app.permanent_session_lifetime = timedelta(minutes=15)
 
 
