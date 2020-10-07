@@ -15,7 +15,7 @@
           <ion-title>
             <h1>Login</h1>
           </ion-title>
-          
+
           <form action="{{ url_for('login') }}" method="POST" name="login_form">
             <ion-list>
               <ion-item lines="none">
@@ -30,7 +30,7 @@
             <ion-item>
               <div class="g-recaptcha" data-sitekey={{keys}}></div>
             </ion-item>
-            
+
             <section>
               <ion-button type="submit" id="login" expand="block" fill="clear">
                 Submit</ion-button>

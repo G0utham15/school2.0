@@ -129,7 +129,11 @@ app = Flask(__name__)
 
 @app.errorhandler(500)
 def server_error(e):
-    flash("Something went wrong please try again", "error")
+    try:
+        db.active.delete_one({"_id":session['user']['_id']})
+    except:
+        pass
+    flash("Something went wrong please try again")
     return redirect("/")
 
 

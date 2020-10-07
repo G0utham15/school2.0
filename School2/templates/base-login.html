@@ -7,7 +7,9 @@
   <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
   <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+    integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg=="
+    crossorigin="anonymous"></script>
   <link rel="stylesheet" href="../static/css/dark.css" />
   </style>
   <script type="module">
@@ -84,6 +86,9 @@
             <ion-button expand="block" fill="clear" href="{{ url_for('results') }}">Results</ion-button>
           </ion-item>
           <ion-item>
+            <ion-button expand="block" fill="clear" href="{{url_for('fail')}}">Student Reports</ion-button>
+          </ion-item>
+          <ion-item>
             <ion-button expand="block" fill="clear" href="{{url_for('user')}}">User Search</ion-button>
           </ion-item>
           <ion-item>
@@ -157,31 +162,31 @@
       toggle.checked = shouldCheck;
     }
   </script>
-    <script>
-      let currentPopover = null;
-  
-      const buttons = document.querySelector('#profile');
-      buttons.addEventListener('click', handleButtonClick);
-  
-      async function handleButtonClick(ev) {
-        popover = await popoverController.create({
-          component: 'popover-example-page',
-          event: ev,
-          translucent: true
-        });
-        currentPopover = popover;
-        return popover.present();
+  <script>
+    let currentPopover = null;
+
+    const buttons = document.querySelector('#profile');
+    buttons.addEventListener('click', handleButtonClick);
+
+    async function handleButtonClick(ev) {
+      popover = await popoverController.create({
+        component: 'popover-example-page',
+        event: ev,
+        translucent: true
+      });
+      currentPopover = popover;
+      return popover.present();
+    }
+
+    function dismissPopover() {
+      if (currentPopover) {
+        currentPopover.dismiss().then(() => { currentPopover = null; });
       }
-  
-      function dismissPopover() {
-        if (currentPopover) {
-          currentPopover.dismiss().then(() => { currentPopover = null; });
-        }
-      }
-  
-      customElements.define('popover-example-page', class ModalContent extends HTMLElement {
-        connectedCallback() {
-          this.innerHTML = `
+    }
+
+    customElements.define('popover-example-page', class ModalContent extends HTMLElement {
+      connectedCallback() {
+        this.innerHTML = `
             <ion-list>
               <ion-item>
             <ion-avatar slot="start">
@@ -197,9 +202,9 @@
           <ion-button expand="block" fill="clear" color="danger" href="{{ url_for('logout') }}">Logout</ion-button>
             </ion-list>
           `;
-        }
-      });
-    </script>
+      }
+    });
+  </script>
 </body>
 
 </html>
