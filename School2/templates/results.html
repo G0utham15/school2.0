@@ -26,59 +26,158 @@
 
         </form>
         {% elif session['user']['role']=='student' %}
-        {{marks}}
         <ion-list>
-            <ion-list-header>
-                <h1>{{marks[0]['course_name'] }} - {{marks[0]['course_id']}}</h1>
-            </ion-list-header>
-        {% for i in marks %}
-        
-            <ion-item-group>
+            {% for i in mark %}
+            <ion-card>
+                <ion-row>
+                    <ion-col>
 
-                <ion-item-divider>
-                    <ion-label><h2>{{i['exam']}}</h2></ion-label>
-                </ion-item-divider>
-                <ion-item lines="none">
-                    <ion-label>
-                        <h5>Max. Marks : {{ i['maxMarks'] }}</h5>
-                        <h5>Scored Marks : {{ i['marks'][session['user']['_id']] }}</h5>
-                    </ion-label>
-                </ion-item>
-            </ion-item-group>
-            <h5>{{i}}</h5>
-            <canvas id="active" style="height:500px; width:300px " width="500" height="400"></canvas>
-          <script>
+                        <ion-list-header>
+                            <ion-col>
+                                <h5>Course : {{i}}</h5>
+                            </ion-col>
+                            <ion-col>
+                                <h5>Grade Predicted: <ion-text color={{mark[i]['color']}}>{{mark[i]['predGrad']}}
+                                    </ion-text>
+                                </h5>
+                            </ion-col>
+                        </ion-list-header>
+                        <ion-row>
+                            <ion-col>
+                                <h5>Exam Title</h5>
+                            </ion-col>
+                            <ion-col>
+                                <h5>Scored Marks</h5>
+                            </ion-col>
+                            <ion-col>
+                                <h5>Max. Marks</h5>
+                            </ion-col>
+                        </ion-row>
 
-		window.onload = function() {
-			var ctx = document.getElementById('canvas').getContext('2d');
-			window.myBar = new Chart(ctx, {
-				type: 'bar',
-				data: [
-					{{i['marks'][session['user']['_id']]}}
-				],
-				options: {
-					title: {
-						display: true,
-						text: 'Chart.js Bar Chart - Stacked'
-					},
-					tooltips: {
-						mode: 'index',
-						intersect: false
-					},
-					responsive: true,
-					scales: {
-						x: {
-							stacked: true,
-						},
-						y: {
-							stacked: true
-						}
-					}
-				}
-			});
-		};
 
-          </script>
+                        <ion-row>
+                            <ion-col>
+                                <h5>CAT-1</h5>
+                            </ion-col>
+                            {% if mark[i]['cat1'] %}
+                            <ion-col>
+                                <h5>{{mark[i]['cat1']}}</h5>
+                            </ion-col>
+                            <ion-col>
+                                <h5>{{mark[i]['maxMarks']['cat1']}}</h5>
+                            </ion-col>
+                            {% else %}
+                            <ion-col>
+                                <h5>TBA</h5>
+                            </ion-col>
+                            <ion-col>
+                                <h5>TBA</h5>
+                            </ion-col>
+                            {% endif %}
+                        </ion-row>
+
+
+                        <ion-row>
+                            <ion-col>
+                                <h5>CAT-2</h5>
+                            </ion-col>
+                            {% if mark[i]['cat2'] %}
+                            <ion-col>
+                                <h5>{{mark[i]['cat2']}}</h5>
+                            </ion-col>
+                            <ion-col>
+                                <h5>{{mark[i]['maxMarks']['cat2']}}</h5>
+                            </ion-col>
+                            {% else %}
+                            <ion-col>
+                                <h5>TBA</h5>
+                            </ion-col>
+                            <ion-col>
+                                <h5>TBA</h5>
+                            </ion-col>
+                            {% endif %}
+                        </ion-row>
+
+
+                        <ion-row>
+                            <ion-col>
+                                <h5>FAT</h5>
+                            </ion-col>
+                            {% if mark[i]['fat'] %}
+                            <ion-col>
+                                <h5>{{mark[i]['fat']}}</h5>
+                            </ion-col>
+                            <ion-col>
+                                <h5>{{mark[i]['maxMarks']['fat']}}</h5>
+                            </ion-col>
+                            {% else %}
+                            <ion-col>
+                                <h5>TBA</h5>
+                            </ion-col>
+                            <ion-col>
+                                <h5>TBA</h5>
+                            </ion-col>
+                            {% endif %}
+                        </ion-row>
+
+                        <ion-row>
+                            <ion-col>
+                                <h5>Total</h5>
+                            </ion-col>
+                            <ion-col>
+                                <h5>{{mark[i]['total']}}</h5>
+                            </ion-col>
+                            <ion-col>
+                                <h5>{{mark[i]['totMax']}}</h5>
+                            </ion-col>
+                        </ion-row>
+
+                    </ion-col>
+                    <ion-col>
+
+                        <canvas id="bar-chart-horizontal-{{i}}" width="800" height="450"></canvas>
+                        <script>
+                            new Chart(document.getElementById("bar-chart-horizontal-{{i}}"), {
+                                type: 'horizontalBar',
+                                data: {
+                                    labels: ["CAT-1", "CAT-2", "FAT"],
+                                    datasets: [
+                                        {
+                                            label: "Scored Marks",
+                                            type: "horizontalBar",
+                                            backgroundColor: "#3e95cd",
+                                            data: [{{ mark[i]['cat1'] }}, {{ mark[i]['cat2'] }}, {{ mark[i]['fat'] }}],
+                                        },
+                                {
+                                    label: "Average",
+                                    type: "horizontalBar",
+                                    backgroundColor: "rgb(75, 192, 192, 0.5)",
+                                    data: {{ mark[i]['clsAvg'] }},
+                                }
+                                    ]
+                                },
+                                options: {
+                                legend: { display: true },
+                                title: {
+                                    display: true,
+                                    text: 'Scored Marks'
+                                },
+                                scales: {
+                                    xAxes: [{
+                                        display: true,
+                                        ticks: {
+                                            min: 0, // minimum value
+                                            max: 100 // maximum value
+                                        }
+                                    }]
+                                }
+                            }
+                            });
+                        </script>
+
+                    </ion-col>
+                </ion-row>
+            </ion-card>
             {% endfor %}
         </ion-list>
         {% endif %}

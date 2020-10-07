@@ -1,0 +1,80 @@
+{% extends "base-login.html" %}
+
+{% block head %}
+<title>Welcome {{role}}</title>
+{% endblock %}
+
+{% block body %}
+<ion-content>
+    {% for i in posFail %}
+    <ion-card>
+        <ion-title><h1>Course: {{i}}</h1></ion-title>
+        
+        <ion-row>
+            <ion-col>
+                <div style="width: 75%;">
+                    <canvas id="active" width="800" height="450"></canvas>
+                </div>
+            </ion-col>
+            <ion-col>
+                <ion-list>
+                    <ion-item>
+                        <h5>fail: <ion-text color='danger'>
+                                <h5>{{posFail[i]['fail']}}</h5>
+                            </ion-text>
+                        </h5>
+                    </ion-item>
+                    <ion-item>
+                        <h5>Average students: <ion-text color='warning'>
+                                <h5>{{posFail[i]['avg']}}</h5>
+                            </ion-text>
+                        </h5>
+                    </ion-item>
+                    <ion-item>
+                        <h5>Toppers: <ion-text color='success'>
+                                <h5>{{posFail[i]['top']}}</h5>
+                            </ion-text>
+                        </h5>
+                    </ion-item>
+                </ion-list>
+            </ion-col>
+        </ion-row>
+        <script>
+            let active = document.getElementById('active').getContext('2d');
+            var chart = new Chart(active, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [{{ posFail[i]['fail'] | length }}, {{ posFail[i]['avg'] | length }}, {{ posFail[i]['top'] | length }}],
+            label: 'Dataset 1',
+                backgroundColor: ["red", "blue", "green"],
+            }],
+            labels: [
+                'Fail',
+                'Average',
+                'Top'
+            ]
+              },
+            options: {
+                responsive: true,
+                    legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                        text: 'Predicted grades'
+                },
+                animation: {
+                    animateScale: true,
+                        animateRotate: true
+                }
+            }
+            });
+        </script>
+
+    </ion-card>
+    {% endfor %}
+
+</ion-content>
+
+{% endblock %}

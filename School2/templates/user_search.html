@@ -17,8 +17,11 @@
   <ion-app>
     <ion-header translucent>
       <ion-toolbar>
-        <ion-title>School</ion-title>
-        <ion-searchbar></ion-searchbar>
+        <ion-item lines="none">
+          <ion-button fill="clear" href="{{url_for('home')}}"><ion-title>School</ion-title></ion-button>
+          <ion-searchbar></ion-searchbar>
+        </ion-item>
+        
       </ion-toolbar>
     </ion-header>
     <ion-content fullscreen>

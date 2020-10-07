@@ -204,8 +204,49 @@ def results():
         courses = list(db.courses.find({"faculty_id": session["user"]["_id"]}))
         return render_template("results.html",courses=courses)
     elif session['user']['role']=="student":
-        marks = db.results.find({"class": session["user"]["class"]})
-        return render_template("results.html", marks=list(marks))
+        marks = list(db.results.find({"class": session["user"]["class"]}))
+        courses=list(set([i['course_id'] for i in marks]))
+        mark={}
+        for i in sorted(courses):
+            mark[i]={}
+            mark[i]['total']=0
+            mark[i]['totMax']=0
+            mark[i]['mean']=0
+            mark[i]['stDev']=0
+            mark[i]['maxMarks']={}
+            mark[i]['clsAvg']=[]
+            for j in marks:
+                if j['course_id']==i:
+                    mark[i][j['exam']]=j['marks'][session['user']['_id']]
+                    mark[i]['total']+=j['marks'][session['user']['_id']]
+                    mark[i]['totMax']+=j['maxMarks']
+                    mark[i]['mean']+=j['mean']
+                    mark[i]['stDev']+=j['std']**2
+                    mark[i]['maxMarks'][j['exam']]=j['maxMarks']
+                    mark[i]['clsAvg'].append(j['mean'])
+            mark[i]['stDev']=round(mark[i]['stDev']**0.5, 2)
+            mark[i]['predGrad'], mark[i]['color']=grade(mark[i]['total'], mark[i]['mean'], mark[i]['stDev'], mark[i]['totMax'])
+        print(mark)
+        return render_template("results.html", marks=marks, mark=mark)
+
+def grade(scored, mean, stDev, total):
+    if scored>=mean+1.5*stDev:
+        if scored>0.9*total:
+            return 'S', 'success'
+        else:
+            return 'A', 'success'
+    elif scored>=mean+0.5*stDev and scored<mean+1.5*stDev:
+        return 'A', 'success'
+    elif scored>=mean-0.5*stDev and scored<mean+0.5*stDev:
+        return 'B', 'secondary'
+    elif scored>=mean-1*stDev and scored<mean-0.5*stDev:
+        return 'C', 'warning'
+    elif scored>=mean-1.5*stDev and scored<mean-1*stDev:
+        return 'D', 'warning'
+    elif scored>=mean-2*stDev and scored<mean-1.5*stDev:
+        return 'E', 'danger'    
+    elif scored<mean-2*stDev or scored<0.4*total:
+        return 'F', 'danger'
 
 @app.route("/marks", methods=['GET', 'POST'])
 def marks():
@@ -238,6 +279,54 @@ def postres():
     db.results.insert_one(marks)
     return redirect("/results")
 
+def possFail(res):
+    marks = list(db.results.find({"user": session["user"]["_id"]}))
+    courses = list(db.courses.find({"faculty_id": session["user"]["_id"]}))
+    course={i['course_id']:i['students_enrolled'] for i in courses}
+    top={}
+    avg={}
+    fail={}
+    tot={}
+    predGrade={}
+    for i in course:
+        top[i]=[]
+        avg[i]=[]
+        fail[i]=[]
+        tot[i]={}
+        tot[i]['maxMarks']=0
+        tot[i]['mean']=0
+        tot[i]['stDev']=0
+        for j in marks:
+            if i==j['course_id']:
+                tot[i]['maxMarks']+=j['maxMarks']
+                tot[i]['mean']+=j['mean']
+                tot[i]['stDev']+=j['std']**2
+
+                for k in course[i]:
+                    try:
+                        tot[i][k]+=j['marks'][k]
+                    except:
+                        tot[i][k]=0
+                        tot[i][k]+=j['marks'][k]
+        tot[i]['stDev']=round(tot[i]['stDev']**0.5,2)
+        for j in course[i]:
+            if grade(tot[i][j],tot[i]['mean'], tot[i]['stDev'], tot[i]['maxMarks'])[0] in ['A', 'S']:
+                top[i].append(j)
+            elif grade(tot[i][j],tot[i]['mean'], tot[i]['stDev'], tot[i]['maxMarks'])[0] in ['B', 'C', 'D']:
+                avg[i].append(j)
+            else:
+                fail[i].append(j)
+        predGrade[i]={'top':top[i], 'avg':avg[i], 'fail':fail[i]}
+        
+    return predGrade
+
+
+@app.route("/fail")
+def fail():
+    if session["user"]["role"] == "staff":
+        res=list(db.results.find({"user":session['user']["name"]}))
+        posFail=possFail(res)
+        return render_template("fail.html",res=res, posFail=posFail)
 
 ##### Posting class messages and announcements
 
@@ -309,7 +398,7 @@ def set_courses():
 
 @app.route("/user")
 def user():
-    users = list(db.user_details.find({}))
+    users = list(db.user_details.find({}).limit(10))
     return render_template("user_search.html", users=users)
 
 
