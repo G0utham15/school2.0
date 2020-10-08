@@ -12,3 +12,9 @@ Currently it has all the features like :
 Follow the next few steps and you are good to go
 1. Make a mongoDB atlas account (Preferably) or install mongoDB manually and change it in db variable in app.py 
 2. Deploy to heroku and make dyno count to 1
+
+### Features under Development
+1. Messages and Announcements Expiring after Certain time.
+2. Setting passwords on their own and update Password.
+3. Adding E-Mails and OTP when they Forgot Passwords.
+4. File Management
