@@ -16,6 +16,7 @@ import os
 import requests
 import json
 import logger
+import numpy as np
 from user import User
 
 client = pymongo.MongoClient(
@@ -179,7 +180,7 @@ def marks():
 
 @app.route("/postresults", methods=["POST", "GET"])
 def postres():
-    import numpy as np
+
     res = request.form
     course_name=list(db.courses.find({"class":res.get("class"), "faculty_id":session['user']['_id']}))[0]['course_name']
     course_id=list(db.courses.find({"class":res.get("class"), "faculty_id":session['user']['_id']}))[0]['course_id']
