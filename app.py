@@ -85,12 +85,12 @@ def attend():
 @app.route("/login", methods=["POST"])
 def login():
     cred = db.cred.find_one({"username": request.form.get("username").lower()})
-    if is_human(request.form['g-recaptcha-response']) and debug==False:
+    if is_human(request.form['g-recaptcha-response']) and not app.config['DEBUG']:
         if cred and sha256_crypt.verify(request.form.get("password"), cred["password"]):
             return User().start_session(
                 db.user_details.find_one({"_id": cred["username"]})
             )
-    elif app.config['DEBUG']==True:
+    elif app.config['DEBUG']:
         if cred and sha256_crypt.verify(request.form.get("password"), cred["password"]):
             return User().start_session(
                 db.user_details.find_one({"_id": cred["username"]})
@@ -389,5 +389,4 @@ def resUpdatePass():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    debug = True
-    app.run(host="0.0.0.0", port=port, debug=debug)
+    app.run(host="0.0.0.0", port=port)
