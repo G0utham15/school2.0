@@ -1,5 +1,0 @@
-Name, ID, Role, DOB, Gender, DOA, Mobile, MailID, Fee, Salary
-test_student1,test_student1, student,15-08-2000, Male, 15-06-2006,1234567890, test_student1@gmail.com,10000,0
-test_student2, test_student2, student, 15-09-2000, Female, 15-06-2006,2321456789, test_student2@gmail.com,100000,0
-test_Staff1, test_staff1, staff, 15-09-1990, Male, 15-06-2004,1523647890, test_staff1@gmail.com,0,25200
-test_staff2, test_staff2, staff, 15-09-1989, Female, 15-06-2004,1526437890, test_staff2@gmail.com,0,25800

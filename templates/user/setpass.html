@@ -1,0 +1,40 @@
+{% extends "layout/base.html" %}
+
+{% block head %}
+<title>Set Password</title>
+{% endblock %}
+
+{% block body %}
+<ion-content>
+    <ion-grid>
+        <ion-row>
+            <ion-col></ion-col>
+            <ion-col>
+                <ion-card>
+                    <ion-title>
+                        <h1>Set Password</h1>
+                    </ion-title>
+                    <form action="{{ url_for('resSetPass') }}" method="POST" name="login_form">
+                        <ion-list>
+                            <ion-item lines="none">
+                                <ion-label position="floating">Username</ion-label>
+                                <ion-input type="text" name="username" id="inpID" required=true></ion-input>
+                            </ion-item>
+                            <ion-item lines="none">
+                                <ion-label position="floating">Password</ion-label>
+                                <ion-input type="password" name="password" id="inpPass" required=true></ion-input>
+                            </ion-item>
+                        </ion-list>
+                        <section>
+                            <ion-button type="submit" id="setPassword" expand="block" fill="clear">
+                                Submit</ion-button>
+                        </section>
+                    </form>
+                </ion-card>
+            </ion-col>
+            <ion-col></ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
+
+{% endblock %}
