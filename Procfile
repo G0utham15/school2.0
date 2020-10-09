@@ -1,1 +1,1 @@
-web: python School2/app.py
+web: gunicorn app:app --log-file=-

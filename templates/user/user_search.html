@@ -1,0 +1,45 @@
+{% extends "layout/base-login.html" %}
+{% block head %}
+{% endblock %}
+{% block body %}
+  <ion-app>
+    <ion-header translucent>
+      <ion-toolbar>
+        <ion-item lines="none">
+          <ion-button fill="clear" href="{{url_for('home')}}">
+            <ion-title>School</ion-title>
+          </ion-button>
+          
+        </ion-item>
+
+      </ion-toolbar>
+    </ion-header>
+    <ion-content fullscreen>
+      <ion-searchbar></ion-searchbar>
+      <ion-list>
+        {% for i in users %}
+        <ion-item>
+          {{i}}
+        </ion-item>
+        {% endfor %}
+      </ion-list>
+    </ion-content>
+  </ion-app>
+
+  <script>
+    const searchbar = document.querySelector('ion-searchbar');
+    const items = Array.from(document.querySelector('ion-list').children);
+
+    searchbar.addEventListener('ionInput', handleInput);
+
+    function handleInput(event) {
+      const query = event.target.value.toLowerCase();
+      requestAnimationFrame(() => {
+        items.forEach(item => {
+          const shouldShow = item.textContent.toLowerCase().indexOf(query) > -1;
+          item.style.display = shouldShow ? 'block' : 'none';
+        });
+      });
+    }
+  </script>
+{% endblock %}
