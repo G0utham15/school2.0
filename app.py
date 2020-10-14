@@ -76,7 +76,6 @@ def landin():
         return render_template("acad/landin.html", role=session["user"]["role"], ann=announce, active_users=active_users, user_count=user_count)
     return render_template("acad/landin.html", role=session["user"]["role"], ann=announce)
 
-
 ##### User Auth and Adding users
 
 @app.route("/attend")
@@ -383,10 +382,8 @@ def updatePass():
 @app.route("/resUpdatePass", methods=["GET", "POST"])
 def resUpdatePass():
     passwd = request.form
-    old_passwd = db.cred.find({"username": session["user"]["_id"]})
-    db.cred.update_one({{"username": session["user"]["_id"]}, {"$set": update}})
-    return redirect("/updatepass")
-
+    db.cred.update_one({"_id": session["user"]["_id"]}, {"$set": {"password": sha256_crypt.hash(passwd.get("password"))}})
+    return redirect("/details")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

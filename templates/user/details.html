@@ -6,74 +6,116 @@
 {% block body %}
 
 <ion-content>
+    <ion-row>
+        <ion-col>
+            <ion-card>
+                <ion-list>
+                    <ion-list-header>
+                        <h1>Details</h1>
+                    </ion-list-header>
+                    <ion-item lines="none">
+                        <ion-col>
+                            <ion-text>
+                                <h5>Username</h5>
+                            </ion-text>
+                        </ion-col>
+                        <ion-col>
+                            <ion-text>
+                                <h5>{{session['user']['_id']}}</h5>
+                            </ion-text>
+                        </ion-col>
+                    </ion-item>
+                    <ion-item lines="none">
+                        <ion-col>
+                            <ion-text>
+                                <h5>Name</h5>
+                            </ion-text>
+                        </ion-col>
+                        <ion-col>
+                            <ion-text>
+                                <h5>{{session['user']['name']}}</h5>
+                            </ion-text>
+                        </ion-col>
+                    </ion-item>
+                    {% if role=="student" %}
+                    <ion-item lines="none">
+                        <ion-col>
+                            <ion-text>
+                                <h5>Class</h5>
+                            </ion-text>
+                        </ion-col>
+                        <ion-col>
+                            <ion-text>
+                                <h5>{{session['user']['class']}}</h5>
+                            </ion-text>
+                        </ion-col>
+                    </ion-item>
+                    {% endif %}
+                    <ion-item lines="none">
+                        <ion-col>
+                            <ion-text>
+                                <h5>Email ID</h5>
+                            </ion-text>
+                        </ion-col>
+                        <ion-col>
+                            <ion-text>
+                                <h5>{{session['user']['email']}}</h5>
+                            </ion-text>
+                        </ion-col>
+                    </ion-item>
+                    <ion-item lines="none">
+                        <ion-col>
+                            <ion-text>
+                                <h5>Mobile</h5>
+                            </ion-text>
+                        </ion-col>
+                        <ion-col>
+                            <ion-text>
+                                <h5>{{session['user']['mobile']}}</h5>
+                            </ion-text>
+                        </ion-col>
+                    </ion-item>
+                </ion-list>
+            </ion-card>
+        </ion-col>
+        <ion-col>
+            <ion-card>
+                <div class="form">
+                    <ion-title class="list-group-item active">
+                        <h1>Update Password</h1>
+                    </ion-title>
+                    <form action="{{url_for('resUpdatePass')}}" method="POST" name="announce_form">
 
-    <ion-list>
-        <ion-list-header>
-            <h1>Details</h1>
-        </ion-list-header>
-        <ion-item lines="none">
-            <ion-col>
-                <ion-text>
-                    <h5>Username</h5>
-                </ion-text>
-            </ion-col>
-            <ion-col>
-                <ion-text>
-                    <h5>{{session['user']['_id']}}</h5>
-                </ion-text>
-            </ion-col>
-        </ion-item>
-        <ion-item lines="none">
-            <ion-col>
-                <ion-text>
-                    <h5>Name</h5>
-                </ion-text>
-            </ion-col>
-            <ion-col>
-                <ion-text>
-                    <h5>{{session['user']['name']}}</h5>
-                </ion-text>
-            </ion-col>
-        </ion-item>
-        {% if role=="student" %}
-        <ion-item lines="none">
-            <ion-col>
-                <ion-text>
-                    <h5>Class</h5>
-                </ion-text>
-            </ion-col>
-            <ion-col>
-                <ion-text>
-                    <h5>{{session['user']['class']}}</h5>
-                </ion-text>
-            </ion-col>
-        </ion-item>
-        {% endif %}
-        <ion-item lines="none">
-            <ion-col>
-                <ion-text>
-                    <h5>Email ID</h5>
-                </ion-text>
-            </ion-col>
-            <ion-col>
-                <ion-text>
-                    <h5>{{session['user']['email']}}</h5>
-                </ion-text>
-            </ion-col>
-        </ion-item>
-        <ion-item lines="none">
-            <ion-col>
-                <ion-text>
-                    <h5>Mobile</h5>
-                </ion-text>
-            </ion-col>
-            <ion-col>
-                <ion-text>
-                    <h5>{{session['user']['mobile']}}</h5>
-                </ion-text>
-            </ion-col>
-        </ion-item>
-    </ion-list>
-    <ion-button href="{{url_for('home')}}">Back</ion-button>
+                        <ion-item lines="none">
+                            <ion-col>
+                                <ion-text>
+                                    <h5>User ID</h5>
+                                </ion-text>
+                            </ion-col>
+                            <ion-col>
+                                <ion-text>
+                                    <h5>{{session['user']['_id']}}</h5>
+                                </ion-text>
+                            </ion-col>
+                        </ion-item>
+
+                        <ion-item lines="none">
+                            <ion-col>
+                                <ion-text>
+                                    <h5>New Password</h5>
+                                </ion-text>
+                            </ion-col>
+                            <ion-col>
+                                <ion-input type="password" name="password" class="field" required=true></ion-input>
+                            </ion-col>
+
+                        </ion-item>
+
+                        <ion-button type="submit" expand="block" fill="blank">Update Password</ion-button>
+                    </form>
+                </div>
+            </ion-card>
+        </ion-col>
+    </ion-row>
 </ion-content>
 {% endblock %}

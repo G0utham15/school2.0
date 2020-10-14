@@ -9,6 +9,7 @@ from flask import (
     url_for,
     flash,
 )
+import smtplib
 import uuid
 from passlib.hash import sha256_crypt
 
@@ -69,6 +70,22 @@ class User:
         return redirect("/courses")
 
     def add_user(self, details):
+        s = smtplib.SMTP('smtp.gmail.com', 587) 
+  
+        # start TLS for security 
+        s.starttls() 
+  
+        # Authentication 
+        s.login("dev.g0utham15@gmail.com", "Sg106271.5") 
+  
+        # message to be sent 
+        message = "Dear {},\nYour Username assigned is {}.Please set a new password".format(details.get('name'), details.get('username'))
+  
+        # sending the mail 
+        s.sendmail("dev.g0utham15@gmail.com", details.get('email'), message) 
+  
+        # terminating the session 
+        s.quit() 
         user = {
             "_id": details.get("username"),
             "name": details.get("name"),
