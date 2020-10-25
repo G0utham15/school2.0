@@ -31,10 +31,7 @@ def is_human(captcha_response):
     payload = {'response':captcha_response, 'secret':app.config['RECAPTCHA_SECRET_KEY']}
     response = requests.post("https://www.google.com/recaptcha/api/siteverify", payload)
     response_text = json.loads(response.text)
-    print(response_text)
     return response_text['success']
-
-
 
 @app.errorhandler(500)
 def server_error(e):
@@ -45,17 +42,16 @@ def server_error(e):
     flash("Something went wrong please try again")
     return redirect("/")
 
-
 @app.before_request
 def before_request():
     session.permanent = True
     if app.config['DEBUG'] == False:
         app.permanent_session_lifetime = timedelta(minutes=15)
 
-
 @app.route("/",methods=['GET','POST'])
 def home():
     try:
+        session['dark']=False
         if session["logged_in"]:
             return redirect(url_for("landin"))
     except:

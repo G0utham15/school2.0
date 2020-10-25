@@ -33,13 +33,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-content>
-        <ion-item lines="full">
-          <ion-icon slot="start" name="moon"></ion-icon>
-          <ion-label>
-            Toggle Dark Theme
-          </ion-label>
-          <ion-toggle id="themeToggle" slot="end"></ion-toggle>
-        </ion-item>
+        
         <ion-list>
           {% if role == 'student' %}
           </ion-item>
@@ -123,15 +117,20 @@
     <div class="ion-page" id="main-content">
       <ion-header>
         <ion-toolbar>
-          <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
-          </ion-buttons>
-          <ion-button fill="clear" href="{{url_for('home')}}">
-            <ion-title>School2</ion-title>
-          </ion-button>
-          <ion-button fill="clear" slot="end" id="profile">
-            <ion-icon name="person-circle-outline"></ion-icon>
-          </ion-button>
+
+            <ion-buttons slot="start">
+              <ion-menu-button></ion-menu-button>
+            </ion-buttons>
+            <ion-button fill="clear" href="{{url_for('home')}}">
+              <ion-title>School2</ion-title>
+            </ion-button>
+
+            <ion-button fill="clear" slot="end" id="profile">
+              <ion-icon name="person-circle-outline"></ion-icon>
+            </ion-button>
+
+                <ion-icon slot="end" name="moon"></ion-icon>
+                <ion-toggle id="themeToggle" slot="end"></ion-toggle>
         </ion-toolbar>
       </ion-header>
       {% block body %}
@@ -190,7 +189,7 @@
             <ion-list>
               <ion-item>
             <ion-avatar slot="start">
-              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+              <img src="static/assets/avatar.png">
             </ion-avatar>
             <ion-button fill="clear" onclick="window.location.href='{{ url_for('get_details') }}';">
               {{session['user']['name']}}</ion-label>
