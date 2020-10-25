@@ -22,7 +22,10 @@ class User:
     def start_session(self, user):
         session["logged_in"] = True
         session["user"] = user
-        db.active.insert_one(user)
+        try:
+            db.active.insert_one(user)
+        except:
+            pass
         return redirect("/#")
 
     def announce(self, announce, id):
