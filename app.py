@@ -153,9 +153,9 @@ def grade(scored, mean, stDev, total):
         if scored>0.9*total:
             return 'S', 'success'
         else:
-            return 'A', 'success'
+            return 'A+', 'success'
     elif scored>=mean+0.5*stDev and scored<mean+1.5*stDev:
-        return 'A', 'success'
+        return 'A+', 'success'
     elif scored>=mean-0.5*stDev and scored<mean+0.5*stDev:
         return 'B', 'secondary'
     elif scored>=mean-1*stDev and scored<mean-0.5*stDev:
