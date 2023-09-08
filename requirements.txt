@@ -17,7 +17,7 @@ lazy-object-proxy==1.4.3
 logger==1.4
 MarkupSafe==1.1.1
 mccabe==0.6.1
-numpy==1.19.2
+numpy==1.22.0
 passlib==1.7.2
 pathspec==0.8.0
 pylint==2.5.3
